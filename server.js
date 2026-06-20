@@ -58,7 +58,12 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // Serve index.html for all other requests to support React Router / client-side routing
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'), (err) => {
+    if (err) {
+      console.error('Error sending index.html:', err);
+      res.status(500).send("Build files not found. Make sure your Render Web Service's Build Command is set to 'npm install && npm run build' and that it built successfully.");
+    }
+  });
 });
 
 app.listen(PORT, () => {
