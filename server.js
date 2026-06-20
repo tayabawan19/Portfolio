@@ -2,6 +2,8 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -46,6 +48,17 @@ app.post('/api/messages', async (req, res) => {
     console.error('Error saving message:', error);
     res.status(500).json({ error: 'Server error. Failed to save message.' });
   }
+});
+
+// Serve static assets from client build in production
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, 'dist')));
+
+// Serve index.html for all other requests to support React Router / client-side routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
 });
 
 app.listen(PORT, () => {
