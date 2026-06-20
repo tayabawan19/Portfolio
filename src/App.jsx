@@ -146,7 +146,7 @@ export default function App() {
 
   const testimonials = [
     {
-      name: "Areesha Khan",
+      name: "Syed Izhan Shah",
       role: "Classmate / Group Project Teammate",
       quote: "Tayyab is an incredibly reliable teammate. In our software engineering labs, he took the lead on building the core algorithms and ensured our team hit every milestone on time. His dedication is unmatched.",
       avatarBg: "from-pink-500 to-rose-600"
@@ -158,7 +158,7 @@ export default function App() {
       avatarBg: "from-purple-500 to-indigo-600"
     },
     {
-      name: "Zain Ali",
+      name: "Haris Gul",
       role: "Classmate / Project Teammate",
       quote: "Working with Tayyab on the Food Delivery System Dijkstra implementation was a great learning experience. He is excellent at problem-solving and writes highly structured, clean code.",
       avatarBg: "from-amber-500 to-orange-600"
