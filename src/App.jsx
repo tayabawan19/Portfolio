@@ -84,40 +84,66 @@ export default function App() {
 
   const projects = [
     {
+      title: "PaceTrack — Full-Stack Running Tracker Mobile App",
+      description: "A full-stack mobile running tracker app with live GPS tracking, route planning, and gamified motivation features, deployed end-to-end (backend hosted on Render, distributable Android APK via EAS Build).",
+      tags: ["React Native", "Expo", "TypeScript", "Node.js", "Express", "MongoDB Atlas", "JWT"],
+      role: "Solo Full-Stack Developer",
+      path: "~/projects/pacetrack",
+      isFeatured: true,
+      githubMobile: "https://github.com/tayabawan19/PaceTrack",
+      githubBackend: "https://github.com/tayabawan19/PaceTrack-backend",
+      achievements: [
+        "Built a secure authentication system with email OTP verification, bcrypt password/OTP hashing, and JWT session management",
+        "Implemented real-time GPS run tracking using Haversine distance calculation for live pace/distance updates",
+        "Integrated third-party routing (OSRM API) for road-accurate route planning with live polyline rendering on interactive maps",
+        "Designed a MongoDB aggregation pipeline for dashboard analytics (daily/weekly stats, streak calculation, achievement unlocking logic)",
+        "Built a gamification system (streaks, achievement badges) and local push notification engine",
+        "Implemented voice-guided run coaching using text-to-speech triggered at distance milestones",
+        "Designed a full light/dark theme system with persisted user preferences",
+        "Deployed a production REST API on Render connected to MongoDB Atlas, shipped Android build via EAS"
+      ]
+    },
+    {
       title: "Food Delivery System",
       description: "Designed an efficient route-finding food delivery console app implementing Dijkstra's algorithm to compute shortest paths for quick order routing.",
       tags: ["C++", "Dijkstra's Algorithm", "OOP", "Data Structures"],
-      link: "#"
+      link: "#",
+      path: "~/projects/food-delivery"
     },
     {
       title: "Quiz Application",
       description: "Developed an interactive desktop quiz engine using Object-Oriented Programming (OOP) design patterns and Java Swing for GUI layouts.",
       tags: ["Java", "OOP", "Java Swing", "Desktop App"],
-      link: "#"
+      link: "#",
+      path: "~/projects/quiz-app"
     },
     {
       title: "Digital Diary App",
       description: "Created a local personal diary application using Java File I/O stream mechanisms for persistent, secure diary entry storage.",
       tags: ["Java", "File Handling", "Stream I/O", "Data Security"],
-      link: "#"
+      link: "#",
+      path: "~/projects/digital-diary"
     },
     {
       title: "Student Resource Ecosystem App",
       description: "Authored detailed Software Requirements Specification (SRS) documentation including comprehensive UML models, architectures, and user journeys.",
       tags: ["SRS Documentation", "UML Modeling", "Systems Analysis", "Software Engineering"],
-      link: "#"
+      link: "#",
+      path: "~/projects/student-ecosystem"
     },
     {
       title: "Online Social Media Management Tool",
       description: "Mapped and engineered the full Software Development Life Cycle (SDLC) process modeling from requirements elicitation to deployment plan.",
       tags: ["SDLC Documentation", "Agile Methodologies", "Risk Management", "System Design"],
-      link: "#"
+      link: "#",
+      path: "~/projects/social-media-tool"
     },
     {
       title: "JhootayShootay E-Commerce Store",
       description: "Launched an operational e-commerce store with custom storefront layout patterns using WooCommerce and hosted on Pantheon.io environment.",
       tags: ["WordPress", "WooCommerce", "Pantheon.io", "Web Design"],
-      link: "#"
+      link: "#",
+      path: "~/projects/jhootay-shootay"
     }
   ];
 
@@ -417,6 +443,12 @@ export default function App() {
               description={project.description}
               tags={project.tags}
               link={project.link}
+              isFeatured={project.isFeatured}
+              role={project.role}
+              path={project.path}
+              githubMobile={project.githubMobile}
+              githubBackend={project.githubBackend}
+              achievements={project.achievements}
             />
           ))}
         </div>
