@@ -285,7 +285,7 @@ export default function App() {
               {/* Social Icons */}
               <div className="flex items-center space-x-4 border-l border-white/10 pl-6 h-8">
                 <a
-                  href="https://linkedin.com/in/tayyab-tanveer"
+                  href="https://www.linkedin.com/in/muhammad-tayyab-tanveer-7247153b1/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-[#E91E63] transition-colors"
@@ -294,7 +294,7 @@ export default function App() {
                   <Linkedin size={20} />
                 </a>
                 <a
-                  href="https://github.com/tayyab-tanveer"
+                  href="https://github.com/tayabawan19"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-[#E91E63] transition-colors"
@@ -675,7 +675,7 @@ export default function App() {
             {/* Social Icons */}
             <div className="flex space-x-4 pt-6 lg:pt-0">
               <a
-                href="https://linkedin.com/in/tayyab-tanveer"
+                href="https://www.linkedin.com/in/muhammad-tayyab-tanveer-7247153b1/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3.5 bg-white/5 text-gray-400 hover:bg-[#E91E63]/15 hover:text-[#E91E63] border border-white/5 rounded-full transition-all cursor-pointer shadow-sm"
@@ -684,7 +684,7 @@ export default function App() {
                 <Linkedin size={20} />
               </a>
               <a
-                href="https://github.com/tayyab-tanveer"
+                href="https://github.com/tayabawan19"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-3.5 bg-white/5 text-gray-400 hover:bg-[#E91E63]/15 hover:text-[#E91E63] border border-white/5 rounded-full transition-all cursor-pointer shadow-sm"
