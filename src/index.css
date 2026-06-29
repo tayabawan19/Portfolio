@@ -2,13 +2,13 @@
 
 @theme {
   --font-sans: "Inter", sans-serif;
-  --font-space: "Space Grotesk", sans-serif;
+  --font-display: "Rajdhani", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
   
-  --color-accent: #E91E63;
-  --color-accent-hover: #C2185B;
-  --color-dark: #0A0B0D;
-  --color-dark-card: #121418;
+  --color-accent: #FF1A1A;
+  --color-accent-hover: #E53935;
+  --color-dark: #0A0A0A;
+  --color-dark-card: #121212;
   --color-dark-border: rgba(255, 255, 255, 0.05);
 }
 
@@ -27,65 +27,77 @@
   }
   
   h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-space);
+    font-family: var(--font-display);
+    font-weight: 700;
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #0A0B0D;
+  background: #0A0A0A;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F2229;
+  background: #1A1A1A;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #E91E63;
+  background: #FF1A1A;
 }
 
 /* Glassmorphism Styles */
 .glass {
-  background: rgba(10, 11, 13, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .glass-card {
-  background: rgba(18, 20, 24, 0.6);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(18, 18, 18, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.03);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .glass-card:hover {
-  border-color: rgba(233, 30, 99, 0.2);
-  background: rgba(18, 20, 24, 0.85);
-  box-shadow: 0 10px 30px -10px rgba(233, 30, 99, 0.15);
+  border-color: rgba(255, 26, 26, 0.25);
+  background: rgba(18, 18, 18, 0.85);
+  box-shadow: 0 10px 30px -10px rgba(255, 26, 26, 0.15);
 }
 
 .tech-tag {
   font-family: var(--font-mono);
   font-size: 0.72rem;
-  padding: 0.25rem 0.5rem;
-  background: rgba(233, 30, 99, 0.06);
-  color: #E91E63;
-  border: 1px solid rgba(233, 30, 99, 0.15);
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 26, 26, 0.06);
+  color: #FF1A1A;
+  border: 1px solid rgba(255, 26, 26, 0.2);
   border-radius: 4px;
   transition: all 0.2s ease;
+  text-transform: uppercase;
 }
 
 .tech-tag:hover {
-  background: rgba(233, 30, 99, 0.15);
-  border-color: rgba(233, 30, 99, 0.3);
+  background: rgba(255, 26, 26, 0.15);
+  border-color: rgba(255, 26, 26, 0.4);
 }
 
 .text-gradient {
-  background: linear-gradient(135deg, #FFFFFF 0%, #E91E63 100%);
+  background: linear-gradient(135deg, #FFFFFF 30%, #FF1A1A 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Custom Horizontal Scroll Hide Scrollbars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

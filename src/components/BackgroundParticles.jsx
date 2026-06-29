@@ -1,74 +1,93 @@
-import React, { useRef, useMemo, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
-
-function Particles() {
-  const pointsRef = useRef();
-  const mouse = useRef({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (event) => {
-      mouse.current.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.current.y = -(event.clientY / window.innerHeight) * 2 + 1;
-    };
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
-
-  const particleCount = 1200;
-  
-  const positions = useMemo(() => {
-    const pos = new Float32Array(particleCount * 3);
-    for (let i = 0; i < particleCount; i++) {
-      pos[i * 3] = (Math.random() - 0.5) * 40;     // X
-      pos[i * 3 + 1] = (Math.random() - 0.5) * 40; // Y
-      pos[i * 3 + 2] = (Math.random() - 0.5) * 40; // Z
-    }
-    return pos;
-  }, []);
-
-  useFrame((state, delta) => {
-    // Clamp delta to avoid huge jumps on tab switch
-    const clampedDelta = Math.min(delta, 0.1);
-    
-    // Slow continuous background rotation
-    pointsRef.current.rotation.y += 0.015 * clampedDelta;
-    pointsRef.current.rotation.x += 0.008 * clampedDelta;
-    
-    // Smooth mouse parallax interpolation
-    const targetY = mouse.current.x * 0.12;
-    const targetX = -mouse.current.y * 0.12;
-    pointsRef.current.rotation.y += (targetY - pointsRef.current.rotation.y) * 0.05;
-    pointsRef.current.rotation.x += (targetX - pointsRef.current.rotation.x) * 0.05;
-  });
-
-  return (
-    <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          args={[positions, 3]}
-        />
-      </bufferGeometry>
-      <pointsMaterial
-        color="#E91E63"
-        size={0.07}
-        sizeAttenuation={true}
-        transparent={true}
-        opacity={0.3}
-        depthWrite={false}
-      />
-    </points>
-  );
-}
+import React, { useEffect, useRef } from 'react';
 
 export default function BackgroundParticles() {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    // Create sparse, subtle star particles
+    const starCount = 120;
+    const stars = [];
+
+    for (let i = 0; i < starCount; i++) {
+      stars.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 1.2 + 0.3,
+        // Drift slowly in random directions
+        vx: (Math.random() - 0.5) * 0.15,
+        vy: (Math.random() - 0.5) * 0.15,
+        // Opacity variation for twinkling effect
+        opacity: Math.random() * 0.7 + 0.3,
+        twinkleSpeed: Math.random() * 0.01 + 0.002,
+        twinklePhase: Math.random() * Math.PI * 2,
+      });
+    }
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    const animate = () => {
+      // Clear canvas with a solid deep black background
+      ctx.fillStyle = '#0A0A0A';
+      ctx.fillRect(0, 0, width, height);
+
+      // Draw and update stars
+      for (let i = 0; i < starCount; i++) {
+        const star = stars[i];
+
+        // Draw star
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        
+        // Dynamic opacity for subtle twinkling
+        star.twinklePhase += star.twinkleSpeed;
+        const currentOpacity = star.opacity * (0.7 + 0.3 * Math.sin(star.twinklePhase));
+        
+        ctx.fillStyle = `rgba(255, 255, 255, ${currentOpacity})`;
+        ctx.fill();
+
+        // Move star
+        star.x += star.vx;
+        star.y += star.vy;
+
+        // Wrap around borders
+        if (star.x < 0) star.x = width;
+        if (star.x > width) star.x = 0;
+        if (star.y < 0) star.y = height;
+        if (star.y > height) star.y = 0;
+      }
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
   return (
-    <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none bg-[#0A0B0D]">
-      <Canvas camera={{ position: [0, 0, 12], fov: 60 }}>
-        <color attach="background" args={['#0A0B0D']} />
-        <ambientLight intensity={0.3} />
-        <Particles />
-      </Canvas>
-    </div>
+    <canvas
+      ref={canvasRef}
+      className="fixed inset-0 w-full h-full -z-10 pointer-events-none block"
+      style={{ background: '#0A0A0A' }}
+    />
   );
 }

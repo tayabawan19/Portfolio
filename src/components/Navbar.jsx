@@ -1,22 +1,34 @@
 import React, { useState, useEffect } from 'react';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, Phone } from 'lucide-react';
 
 const navItems = [
-  { label: 'Home', href: '#home' },
-  { label: 'About', href: '#about' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Contact', href: '#contact' }
+  { label: 'ABOUT', id: '#about' },
+  { label: 'SKILLS', id: '#skills' },
+  { label: 'SERVICES', id: '#services' },
+  { label: 'EXPERIENCE', id: '#experience' },
+  { label: 'PROJECTS', id: '#projects' },
+  { label: 'REVIEWS', id: '#reviews' }
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['home', 'about', 'projects', 'skills', 'contact'];
-      const scrollPos = window.scrollY + 120;
+      // Add blur on scroll
+      setIsScrolled(window.scrollY > 20);
+
+      // Track active section
+      const sections = ['about', 'skills', 'services', 'experience', 'projects', 'reviews'];
+      const scrollPos = window.scrollY + 120; // offset
+
+      // If at very top, set active to home
+      if (window.scrollY < 200) {
+        setActiveSection('home');
+        return;
+      }
 
       for (const section of sections) {
         const element = document.getElementById(section);
@@ -35,12 +47,21 @@ export default function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handleClick = (e, href) => {
-    e.preventDefault();
+  const handleScrollTo = (targetId) => {
     setIsOpen(false);
-    const element = document.querySelector(href);
+    
+    // For logo or home, scroll to very top
+    if (targetId === '#home') {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+      return;
+    }
+
+    const element = document.querySelector(targetId);
     if (element) {
-      const offset = 80; // Navbar height offset
+      const offset = 80; // sticky navbar offset
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -54,76 +75,83 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 glass">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 h-20 flex items-center justify-between">
-        {/* Logo */}
-        <a 
-          href="#home" 
-          onClick={(e) => handleClick(e, '#home')}
-          className="text-xl font-bold tracking-tight text-white font-space hover:text-[#E91E63] transition-colors animate-fade-in"
+    <nav 
+      className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+        isScrolled 
+          ? 'bg-[#0A0A0A]/90 backdrop-blur-md border-b border-white/5 py-4' 
+          : 'bg-transparent py-6'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
+        {/* Split logo (TA bold white + YYAB bold red) */}
+        <button 
+          onClick={() => handleScrollTo('#home')}
+          className="text-2xl font-bold font-display tracking-tight text-white hover:opacity-90 transition-opacity cursor-pointer text-left"
         >
-          TAYYAB<span className="text-[#E91E63]">.</span>
-        </a>
+          TA<span className="text-[#FF1A1A]">YYAB</span>
+        </button>
 
-        {/* Desktop Links */}
-        <div className="hidden md:flex items-center space-x-8">
+        {/* Center Links (ABOUT, SKILLS, SERVICES, EXPERIENCE, PROJECTS, REVIEWS) */}
+        <div className="hidden lg:flex items-center space-x-6 xl:space-x-8">
           {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={(e) => handleClick(e, item.href)}
-              className={`text-sm font-medium transition-colors hover:text-[#E91E63] font-sans ${
-                activeSection === item.href.replace('#', '') 
-                  ? 'text-[#E91E63]' 
-                  : 'text-gray-400'
+            <button
+              key={item.id}
+              onClick={() => handleScrollTo(item.id)}
+              className={`text-xs font-semibold tracking-widest transition-all duration-300 font-display hover:text-[#FF1A1A] cursor-pointer ${
+                activeSection === item.id.replace('#', '') 
+                  ? 'text-[#FF1A1A]' 
+                  : 'text-gray-300'
               }`}
             >
               {item.label}
-            </a>
+            </button>
           ))}
-          <a
-            href="#contact"
-            onClick={(e) => handleClick(e, '#contact')}
-            className="px-5 py-2.5 text-xs font-semibold uppercase tracking-wider rounded-md border border-[#E91E63]/30 text-white bg-[#E91E63]/10 hover:bg-[#E91E63] hover:border-[#E91E63] transition-all font-mono shadow-sm shadow-[#E91E63]/10"
+        </div>
+
+        {/* Right Red Contact Button with Phone Icon */}
+        <div className="hidden lg:flex items-center">
+          <button
+            onClick={() => handleScrollTo('#contact')}
+            className="px-5 py-2.5 text-xs font-bold font-mono uppercase tracking-wider text-white bg-[#FF1A1A] hover:bg-[#E53935] rounded-md transition-all duration-300 flex items-center space-x-2 cursor-pointer shadow-md shadow-[#FF1A1A]/20 hover:shadow-[#FF1A1A]/40"
           >
-            Hire Me
-          </a>
+            <Phone size={14} />
+            <span>CONTACT</span>
+          </button>
         </div>
 
         {/* Mobile menu button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="md:hidden text-gray-400 hover:text-white transition-colors"
+          className="lg:hidden text-gray-300 hover:text-white transition-colors cursor-pointer"
           aria-label="Toggle menu"
         >
           {isOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
-      {/* Mobile Links */}
+      {/* Mobile Links Menu */}
       {isOpen && (
-        <div className="md:hidden bg-[#0A0B0D]/95 border-b border-gray-800 px-6 py-8 flex flex-col space-y-6">
+        <div className="lg:hidden bg-[#0A0A0A]/95 border-b border-white/5 px-6 py-8 flex flex-col space-y-6 absolute top-full left-0 w-full backdrop-blur-md">
           {navItems.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              onClick={(e) => handleClick(e, item.href)}
-              className={`text-base font-medium transition-colors hover:text-[#E91E63] font-sans ${
-                activeSection === item.href.replace('#', '') 
-                  ? 'text-[#E91E63]' 
+            <button
+              key={item.id}
+              onClick={() => handleScrollTo(item.id)}
+              className={`text-sm font-bold tracking-widest text-left font-display hover:text-[#FF1A1A] cursor-pointer ${
+                activeSection === item.id.replace('#', '') 
+                  ? 'text-[#FF1A1A]' 
                   : 'text-gray-300'
               }`}
             >
               {item.label}
-            </a>
+            </button>
           ))}
-          <a
-            href="#contact"
-            onClick={(e) => handleClick(e, '#contact')}
-            className="w-full text-center py-3 text-sm font-semibold uppercase tracking-wider rounded-md border border-[#E91E63]/30 text-white bg-[#E91E63]/10 hover:bg-[#E91E63] transition-all font-mono"
+          <button
+            onClick={() => handleScrollTo('#contact')}
+            className="w-full text-center py-3 text-xs font-bold uppercase tracking-widest text-white bg-[#FF1A1A] hover:bg-[#E53935] rounded-md transition-all font-mono flex items-center justify-center space-x-2 cursor-pointer"
           >
-            Hire Me
-          </a>
+            <Phone size={14} />
+            <span>CONTACT</span>
+          </button>
         </div>
       )}
     </nav>

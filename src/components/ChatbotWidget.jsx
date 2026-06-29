@@ -21,8 +21,8 @@ const KNOWLEDGE_BASE = [
   },
   {
     category: "internship",
-    keywords: ["internship", "work experience", "excelerate", "experience", "intern", "job"],
-    answer: "Tayyab completed a 4-week remote AI-Powered Data Analysis internship with Excelerate. During the internship, he worked on parsing data models, evaluating statistics, and generating automated reports."
+    keywords: ["internship", "work experience", "excelerate", "experience", "intern", "job", "certificate", "rit", "tiger stripes", "rochester"],
+    answer: "Tayyab successfully completed the AI-Powered Data Analysis Remote Internship supported by Rochester Institute of Technology's Tiger STRIPES Program and powered by Excelerate on April 9, 2026. He earned a Certificate of Achievement for his work in data parsing, cleaning, and model setups."
   },
   {
     category: "skills",
@@ -173,7 +173,7 @@ export default function ChatbotWidget() {
             Tayyab's Credentials:
             - Education: 4th semester BS Software Engineering at COMSATS University Islamabad. CGPA: 3.1.
             - Skills: Java, C++, Python, Oracle SQL, MongoDB, VS Code, Figma, Canva, WordPress, OOP, Data Structures, SDLC, SRS/SDS Documentation.
-            - Internship: 4-week remote AI-Powered Data Analysis internship with Excelerate.
+            - Internship: 4-week remote AI-Powered Data Analysis internship with Excelerate, supported by Rochester Institute of Technology's Tiger STRIPES Program (completed April 9, 2026, earning a Certificate of Achievement).
             - Languages: English, Urdu, Punjabi (fluent in all).
             - Contact: Email: tayabawan.in@gmail.com, Phone: +92 326 9812642, Location: Islamabad, Pakistan.
             - Projects: 
@@ -284,10 +284,10 @@ export default function ChatbotWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 40, scale: 0.9 }}
             transition={{ type: "spring", damping: 25, stiffness: 220 }}
-            className="w-[340px] sm:w-[360px] h-[480px] bg-[#121418] border border-white/5 rounded-2xl shadow-2xl flex flex-col overflow-hidden mb-4"
+            className="w-[340px] sm:w-[360px] h-[480px] bg-[#121212] border border-white/5 rounded-2xl shadow-2xl flex flex-col overflow-hidden mb-4"
           >
             {/* Header */}
-            <div className="bg-[#0A0B0D] px-4 py-3.5 border-b border-white/5 flex items-center justify-between">
+            <div className="bg-[#0A0A0A] px-4 py-3.5 border-b border-white/5 flex items-center justify-between">
               <div className="flex items-center space-x-2">
                 {/* pulsing status indicator */}
                 <span className="relative flex h-2 w-2">
@@ -330,7 +330,7 @@ export default function ChatbotWidget() {
                 >
                   <div
                     className={`px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-sans leading-relaxed whitespace-pre-line max-w-[85%] ${msg.sender === 'user'
-                        ? 'bg-[#E91E63] text-white rounded-tr-none shadow-md shadow-[#E91E63]/10'
+                        ? 'bg-[#FF1A1A] text-white rounded-tr-none shadow-md shadow-[#FF1A1A]/10'
                         : 'bg-white/5 border border-white/5 text-gray-300 rounded-tl-none'
                       }`}
                   >
@@ -354,12 +354,12 @@ export default function ChatbotWidget() {
             </div>
 
             {/* Suggestions pills */}
-            <div className="px-4 py-2 bg-[#121418]/60 flex flex-wrap gap-1.5 border-t border-white/5">
+            <div className="px-4 py-2 bg-[#121212]/60 flex flex-wrap gap-1.5 border-t border-white/5">
               {suggestQuestions.map((q, idx) => (
                 <button
                   key={idx}
                   onClick={() => handleSendMessage(q)}
-                  className="px-2.5 py-1 text-[11px] font-sans font-medium rounded-full bg-white/5 text-gray-400 border border-white/5 hover:border-[#E91E63]/30 hover:text-[#E91E63] hover:bg-[#E91E63]/5 transition-all text-left cursor-pointer"
+                  className="px-2.5 py-1 text-[11px] font-sans font-medium rounded-full bg-white/5 text-gray-400 border border-white/5 hover:border-[#FF1A1A]/30 hover:text-[#FF1A1A] hover:bg-[#FF1A1A]/5 transition-all text-left cursor-pointer"
                 >
                   {q}
                 </button>
@@ -372,18 +372,18 @@ export default function ChatbotWidget() {
                 e.preventDefault();
                 handleSendMessage(inputValue);
               }}
-              className="bg-[#0A0B0D] p-3 border-t border-white/5 flex items-center space-x-2"
+              className="bg-[#0A0A0A] p-3 border-t border-white/5 flex items-center space-x-2"
             >
               <input
                 type="text"
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask a question..."
-                className="flex-1 bg-[#121418] border border-white/5 rounded-lg px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#E91E63] focus:ring-1 focus:ring-[#E91E63] transition-all"
+                className="flex-1 bg-[#121212] border border-white/5 rounded-lg px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all"
               />
               <button
                 type="submit"
-                className="p-2 bg-[#E91E63] hover:bg-[#C2185B] text-white rounded-lg transition-colors shadow-md shadow-[#E91E63]/10 flex items-center justify-center cursor-pointer"
+                className="p-2 bg-[#FF1A1A] hover:bg-[#E53935] text-white rounded-lg transition-colors shadow-md shadow-[#FF1A1A]/10 flex items-center justify-center cursor-pointer"
                 aria-label="Send Message"
               >
                 <Send size={16} />
@@ -398,12 +398,12 @@ export default function ChatbotWidget() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 bg-[#E91E63] hover:bg-[#C2185B] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#E91E63]/25 cursor-pointer transition-colors relative"
+        className="w-14 h-14 bg-[#FF1A1A] hover:bg-[#E53935] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#FF1A1A]/25 cursor-pointer transition-colors relative"
         aria-label="Toggle assistant widget"
       >
         <MessageSquare size={24} className="stroke-[2px]" />
         {/* subtle badge ring */}
-        <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A0B0D] rounded-full"></span>
+        <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-emerald-500 border-2 border-[#0A0A0A] rounded-full"></span>
       </motion.button>
     </div>
   );
