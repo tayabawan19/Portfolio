@@ -25,7 +25,8 @@ import {
   Rocket,
   BookOpen,
   Award,
-  X
+  X,
+  Wheat
 } from 'lucide-react';
 
 // Custom SVG Social Icons
@@ -86,7 +87,33 @@ export default function App() {
       tags: ["React Native", "Expo", "Node.js", "MongoDB Atlas", "JWT"],
       githubLink: "https://github.com/tayabawan19/PaceTrack",
       icon: MapPin,
-      gradientText: "MOBILE APP"
+      gradientText: "MOBILE APP",
+      achievements: [
+        "Built a secure authentication system with email OTP verification, bcrypt password/OTP hashing, and JWT session management",
+        "Implemented real-time GPS run tracking using Haversine distance calculation for live pace/distance updates",
+        "Integrated third-party routing (OSRM API) for road-accurate route planning with live polyline rendering on interactive maps",
+        "Designed a MongoDB aggregation pipeline for dashboard analytics (daily/weekly stats, streak calculation, achievement unlocking logic)",
+        "Built a gamification system (streaks, achievement badges) and local push notification engine",
+        "Implemented voice-guided run coaching using text-to-speech triggered at distance milestones",
+        "Designed a full light/dark theme system with persisted user preferences",
+        "Deployed a production REST API on Render connected to MongoDB Atlas, shipped Android build via EAS"
+      ]
+    },
+    {
+      title: "CropSense — Pakistan Agricultural Intelligence Platform",
+      description: "A full-stack agricultural management system that digitizes farmer, crop, production, expense, and market data for Pakistan using MongoDB, Node.js, and a custom-built frontend.",
+      tags: ["MongoDB", "Node.js", "Express", "HTML5", "CSS3", "JavaScript", "Aggregation Pipelines", "Index Optimization"],
+      icon: Wheat,
+      gradientText: "AGRI PLATFORM",
+      bgGradient: "from-[#0A1F0A] via-[#0F2D0F] to-[#1A3A1A]",
+      achievements: [
+        "Designed a 10-collection MongoDB document schema by migrating a full Oracle SQL relational model — demonstrating NoSQL denormalization and embedded document strategy",
+        "Created 45 indexes across all 10 collections: system, unique, compound, single-field, and multikey (embedded array) indexes — eliminating full collection scans for fast queries",
+        "Built a custom Index Manager UI tab showing all 45 indexes organized by collection with color-coded type badges and one-click mongosh query copy",
+        "Used MongoDB aggregation pipelines ($group, $sum) on the dashboard to compute total yield per crop, total expenses per category, and farmer/crop counts in real time",
+        "Implemented embedded document design — land parcels inside farms, expenses inside farm_records, prices inside markets — reducing the need for joins",
+        "Built full CRUD operations across 10 entities: Farmers, Farms, Crops, Records, Production, Expenses, Markets, Weather, Districts, Admin — with live search and toast notifications"
+      ]
     },
     {
       title: "Food Delivery System",
@@ -150,12 +177,8 @@ export default function App() {
       skills: ["React Native", "Expo", "React"]
     },
     {
-      title: "Backend",
-      skills: ["Node.js", "Express", "REST API", "JWT"]
-    },
-    {
-      title: "Databases",
-      skills: ["Oracle SQL", "MongoDB Atlas"]
+      title: "Database & Backend",
+      skills: ["MongoDB", "Oracle SQL", "Aggregation Pipelines", "Index Optimization", "Node.js", "Express", "REST API", "JWT"]
     },
     {
       title: "Tools & Platforms",
@@ -380,7 +403,7 @@ export default function App() {
 
             {/* Stat 2 */}
             <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center border-white/5 h-36">
-              <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">7</h4>
+              <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">8</h4>
               <span className="text-[10px] md:text-xs font-bold font-mono tracking-widest text-[#FF1A1A] mt-2 uppercase">PROJECTS BUILT</span>
             </div>
 
@@ -581,6 +604,8 @@ export default function App() {
               liveLink={project.liveLink}
               icon={project.icon}
               gradientText={project.gradientText}
+              bgGradient={project.bgGradient}
+              achievements={project.achievements}
             />
           ))}
         </div>
