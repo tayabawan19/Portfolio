@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import BackgroundParticles from './components/BackgroundParticles';
 import SkillsGlobe from './components/SkillsGlobe';
@@ -6,6 +7,7 @@ import ServicesCarousel from './components/ServicesCarousel';
 import ProjectCard from './components/ProjectCard';
 import ContactForm from './components/ContactForm';
 import ChatbotWidget from './components/ChatbotWidget';
+import BuildLog, { phasesData } from './components/BuildLog';
 import { motion } from 'framer-motion';
 import tayyabPhoto from './assets/tayyab.jpeg';
 
@@ -75,9 +77,17 @@ function RevealSection({ children, id, className = "" }) {
   );
 }
 
-export default function App() {
+function LandingPage() {
   const [activeCert, setActiveCert] = useState(null); // 'excelerate' | 'arch' | null
   const [imgErrors, setImgErrors] = useState({ excelerate: false, arch: false });
+
+  // Calculate Build Log general stats for preview
+  const totalDays = phasesData.reduce((acc, phase) => acc + phase.days.length, 0);
+  const completedDays = phasesData.reduce((acc, phase) => 
+    acc + phase.days.filter(d => d.completed).length, 0
+  );
+  const overallProgress = Math.round((completedDays / totalDays) * 100);
+  const totalProjects = phasesData.reduce((acc, phase) => acc + phase.projects.length, 0);
 
   // Projects dataset mapping to custom representations
   const projectsList = [
@@ -209,12 +219,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden bg-[#0A0A0A] text-gray-200 font-sans selection:bg-[#FF1A1A]/30 selection:text-white">
-      {/* Subtle Drift Particles in Background */}
-      <BackgroundParticles />
-
-      {/* Sticky Header Nav */}
-      <Navbar />
+    <>
 
       {/* Hero Section */}
       <section id="home" className="min-h-screen flex items-center pt-28 pb-16 relative overflow-hidden bg-gradient-to-b from-[#1F0303]/40 via-[#0A0A0A] to-[#0A0A0A]">
@@ -614,6 +619,84 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6 md:px-12 flex justify-end text-xs text-gray-500 font-mono tracking-widest uppercase items-center space-x-2 select-none pointer-events-none mt-2">
           <span>SCROLL HORIZONTALLY</span>
           <ArrowRight size={12} className="animate-bounce-horizontal" />
+        </div>
+      </RevealSection>
+
+      {/* Build Log Preview Section */}
+      <RevealSection id="build-log-preview">
+        <SectionHeader eyebrow="● LEARNING JOURNEY ●" whiteText="Build" redText="Log" />
+        
+        <div className="max-w-4xl mx-auto glass-card p-8 md:p-10 rounded-2xl border border-white/5 bg-[#121212] text-left relative overflow-hidden">
+          {/* Radial red glow highlight */}
+          <div className="absolute top-0 right-0 w-64 h-64 bg-red-500/5 rounded-full blur-3xl pointer-events-none"></div>
+          
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-8 relative z-10">
+            {/* Stats & Info */}
+            <div className="space-y-4 flex-1">
+              <h3 className="text-xl md:text-2xl font-bold font-display text-white tracking-wide uppercase">
+                AI Engineering Roadmap
+              </h3>
+              <p className="text-xs md:text-sm text-gray-400 font-sans leading-relaxed max-w-xl">
+                Track my daily progress as I transition into AI Engineering. From classical machine learning to deep neural networks, computer vision, and building agentic LLM workflows.
+              </p>
+              
+              {/* Condensed Stats Grid */}
+              <div className="grid grid-cols-3 gap-4 pt-2">
+                <div className="bg-[#0A0A0A] p-4 rounded-xl border border-white/5">
+                  <span className="block text-[9px] font-mono text-gray-500 uppercase">Progress</span>
+                  <span className="text-lg md:text-xl font-bold font-display text-white">{overallProgress}%</span>
+                </div>
+                <div className="bg-[#0A0A0A] p-4 rounded-xl border border-white/5">
+                  <span className="block text-[9px] font-mono text-gray-500 uppercase">Days Done</span>
+                  <span className="text-lg md:text-xl font-bold font-display text-white">{completedDays} / {totalDays}</span>
+                </div>
+                <div className="bg-[#0A0A0A] p-4 rounded-xl border border-white/5">
+                  <span className="block text-[9px] font-mono text-gray-500 uppercase">Projects</span>
+                  <span className="text-lg md:text-xl font-bold font-display text-white">{totalProjects}</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Progress Circle & CTA */}
+            <div className="flex flex-col items-center justify-center min-w-[200px] w-full md:w-auto space-y-6">
+              {/* Radial Progress indicator */}
+              <div className="relative w-28 h-28 flex items-center justify-center">
+                {/* SVG Ring */}
+                <svg className="w-full h-full transform -rotate-90">
+                  <circle
+                    cx="56"
+                    cy="56"
+                    r="48"
+                    className="stroke-[#0A0A0A] fill-none"
+                    strokeWidth="8"
+                  />
+                  <circle
+                    cx="56"
+                    cy="56"
+                    r="48"
+                    className="stroke-[#FF1A1A] fill-none transition-all duration-1000"
+                    strokeWidth="8"
+                    strokeDasharray={2 * Math.PI * 48}
+                    strokeDashoffset={2 * Math.PI * 48 * (1 - overallProgress / 100)}
+                    strokeLinecap="round"
+                  />
+                </svg>
+                <div className="absolute flex flex-col items-center justify-center">
+                  <span className="text-xl font-bold font-display text-white">{overallProgress}%</span>
+                  <span className="text-[8px] font-mono text-gray-500 uppercase">Completed</span>
+                </div>
+              </div>
+
+              {/* View Full Build Log Button */}
+              <Link
+                to="/build-log"
+                className="w-full text-center py-3 px-6 text-xs font-bold font-mono uppercase tracking-widest text-white bg-[#FF1A1A] hover:bg-[#E53935] rounded-md transition-all duration-300 shadow-md shadow-[#FF1A1A]/20 hover:shadow-[#FF1A1A]/40 flex items-center justify-center space-x-2 cursor-pointer"
+              >
+                <span>VIEW FULL BUILD LOG</span>
+                <ArrowRight size={14} />
+              </Link>
+            </div>
+          </div>
         </div>
       </RevealSection>
 
@@ -1027,9 +1110,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Floating Chatbot Assistant */}
-      <ChatbotWidget />
-
       {/* Custom Horizontal Scroll Indicator styles */}
       <style>{`
         @keyframes bounceHorizontal {
@@ -1040,6 +1120,28 @@ export default function App() {
           animation: bounceHorizontal 1s ease-in-out infinite;
         }
       `}</style>
-    </div>
+    </>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <div className="min-h-screen relative overflow-hidden bg-[#0A0A0A] text-gray-200 font-sans selection:bg-[#FF1A1A]/30 selection:text-white">
+        {/* Subtle Drift Particles in Background */}
+        <BackgroundParticles />
+
+        {/* Sticky Header Nav */}
+        <Navbar />
+
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/build-log" element={<BuildLog />} />
+        </Routes>
+
+        {/* Floating Chatbot Assistant */}
+        <ChatbotWidget />
+      </div>
+    </Router>
   );
 }

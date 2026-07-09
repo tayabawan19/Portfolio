@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Menu, X, Phone } from 'lucide-react';
 
 const navItems = [
@@ -7,6 +8,7 @@ const navItems = [
   { label: 'SERVICES', id: '#services' },
   { label: 'EXPERIENCE', id: '#experience' },
   { label: 'PROJECTS', id: '#projects' },
+  { label: 'BUILD LOG', id: '/build-log', isRoute: true },
   { label: 'REVIEWS', id: '#reviews' }
 ];
 
@@ -14,13 +16,25 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
       // Add blur on scroll
       setIsScrolled(window.scrollY > 20);
 
-      // Track active section
+      // If we are not on the landing page, highlight build-log or none
+      if (location.pathname !== '/') {
+        if (location.pathname === '/build-log') {
+          setActiveSection('build-log');
+        } else {
+          setActiveSection('');
+        }
+        return;
+      }
+
+      // Track active section on landing page
       const sections = ['about', 'skills', 'services', 'experience', 'projects', 'reviews'];
       const scrollPos = window.scrollY + 120; // offset
 
@@ -44,33 +58,69 @@ export default function Navbar() {
     };
 
     window.addEventListener('scroll', handleScroll);
+    handleScroll(); // Trigger initial scroll check
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [location.pathname]);
 
-  const handleScrollTo = (targetId) => {
+  const handleScrollTo = (targetId, isRoute) => {
     setIsOpen(false);
     
-    // For logo or home, scroll to very top
-    if (targetId === '#home') {
+    if (isRoute) {
+      navigate(targetId);
       window.scrollTo({
         top: 0,
         behavior: 'smooth'
       });
       return;
     }
+    
+    // For logo or home, scroll to very top
+    if (targetId === '#home') {
+      if (location.pathname !== '/') {
+        navigate('/');
+        setTimeout(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }, 100);
+      } else {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      }
+      return;
+    }
 
-    const element = document.querySelector(targetId);
-    if (element) {
-      const offset = 80; // sticky navbar offset
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
+    if (location.pathname !== '/') {
+      navigate('/');
+      setTimeout(() => {
+        const element = document.querySelector(targetId);
+        if (element) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          window.scrollTo({
+            top: elementRect - bodyRect - offset,
+            behavior: 'smooth'
+          });
+        }
+      }, 150);
+    } else {
+      const element = document.querySelector(targetId);
+      if (element) {
+        const offset = 80; // sticky navbar offset
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth'
+        });
+      }
     }
   };
 
@@ -96,9 +146,9 @@ export default function Navbar() {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleScrollTo(item.id)}
+              onClick={() => handleScrollTo(item.id, item.isRoute)}
               className={`text-xs font-semibold tracking-widest transition-all duration-300 font-display hover:text-[#FF1A1A] cursor-pointer ${
-                activeSection === item.id.replace('#', '') 
+                activeSection === item.id.replace('#', '') || (item.isRoute && activeSection === item.id.replace('/', ''))
                   ? 'text-[#FF1A1A]' 
                   : 'text-gray-300'
               }`}
@@ -135,9 +185,9 @@ export default function Navbar() {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleScrollTo(item.id)}
+              onClick={() => handleScrollTo(item.id, item.isRoute)}
               className={`text-sm font-bold tracking-widest text-left font-display hover:text-[#FF1A1A] cursor-pointer ${
-                activeSection === item.id.replace('#', '') 
+                activeSection === item.id.replace('#', '') || (item.isRoute && activeSection === item.id.replace('/', ''))
                   ? 'text-[#FF1A1A]' 
                   : 'text-gray-300'
               }`}
