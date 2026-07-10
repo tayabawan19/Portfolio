@@ -11,6 +11,12 @@ import BuildLog, { phasesData } from './components/BuildLog';
 import { motion } from 'framer-motion';
 import tayyabPhoto from './assets/tayyab.jpeg';
 
+import zenpayLogin from './assets/zenpay/login.jpg';
+import zenpayOTP from './assets/zenpay/otp.jpg';
+import zenpayHome from './assets/zenpay/home.jpg';
+import zenpayCard from './assets/zenpay/card.jpg';
+import zenpayProfile from './assets/zenpay/profile.jpg';
+
 import {
   Mail,
   Phone,
@@ -91,6 +97,32 @@ function LandingPage() {
 
   // Projects dataset mapping to custom representations
   const projectsList = [
+    {
+      title: "ZenPay — Premium Fintech Mobile App",
+      description: "ZenPay is a production-grade, full-stack fintech mobile application built with React Native & Expo, designed to simulate a modern digital wallet and payment platform inspired by apps like Revolut, JazzCash, and Cashly.",
+      tags: ["React Native", "Expo", "Expo Router", "Zustand", "Node.js", "Express", "Firebase Auth", "Cloud Firestore", "Stripe API", "Victory Native", "Render", "EAS Build"],
+      githubLink: "https://github.com/tayabawan19/ZenPay",
+      liveLink: "https://github.com/tayabawan19/ZenPay/releases",
+      icon: Briefcase,
+      gradientText: "MOBILE FINTECH",
+      bgGradient: "from-[#2D0B5A]/35 via-[#12042A] to-[#0A021A]",
+      achievements: [
+        "Real-time P2P transfers with atomic transactions",
+        "Live balance sync (event-driven, no polling)",
+        "Firebase Auth + custom OTP email verification",
+        "Stripe payment integration (test mode)",
+        "Virtual card with 3D flip + freeze/unfreeze",
+        "Spending analytics with category breakdown charts",
+        "Biometric login + push notifications"
+      ],
+      screenshots: [
+        { src: zenpayHome, caption: "Home Dashboard" },
+        { src: zenpayCard, caption: "Virtual Card screen" },
+        { src: zenpayProfile, caption: "Profile screen" },
+        { src: zenpayLogin, caption: "Login/Welcome screen" },
+        { src: zenpayOTP, caption: "Email OTP verification" }
+      ]
+    },
     {
       title: "PaceTrack — Full-Stack Running Tracker",
       description: "A production-ready mobile run tracker with live GPS route rendering, OTP verification, local storage, dashboard analytics, and text-to-speech coaching.",
@@ -611,6 +643,7 @@ function LandingPage() {
               gradientText={project.gradientText}
               bgGradient={project.bgGradient}
               achievements={project.achievements}
+              screenshots={project.screenshots}
             />
           ))}
         </div>
