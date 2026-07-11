@@ -85,8 +85,9 @@ export default function ContactForm() {
 
   if (submitStatus === 'success') {
     return (
-      <div className="glass-card p-8 rounded-xl text-center flex flex-col items-center justify-center py-16 border-red-500/30">
-        <div className="p-4 bg-red-500/10 text-red-500 rounded-full mb-6">
+      <div className="glass-card p-8 rounded-xl text-center flex flex-col items-center justify-center py-16 border-[#06B6D4]/30">
+        {/* Checkmark animation container */}
+        <div className="p-4 bg-[#06B6D4]/10 text-[#06B6D4] rounded-full mb-6 animate-bounce">
           <CheckCircle size={48} />
         </div>
         <h3 className="text-2xl font-bold mb-3 text-white font-display uppercase tracking-wider">Message Sent!</h3>
@@ -95,7 +96,7 @@ export default function ContactForm() {
         </p>
         <button
           onClick={() => setSubmitStatus('idle')}
-          className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider rounded-md border border-red-600/30 text-white bg-red-600/10 hover:bg-red-600 transition-all font-mono cursor-pointer shadow-md shadow-red-600/10"
+          className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider rounded-md border border-[#06B6D4]/30 text-white bg-[#06B6D4]/10 hover:bg-[#06B6D4] transition-all duration-300 font-mono cursor-pointer shadow-md shadow-[#06B6D4]/10 hover:shadow-[#06B6D4]/30"
         >
           Send Another Message
         </button>
@@ -108,7 +109,7 @@ export default function ContactForm() {
       {/* Name */}
       <div>
         <label htmlFor="name" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 font-mono">
-          Name <span className="text-[#FF1A1A]">*</span>
+          Name <span className="text-[#06B6D4]">*</span>
         </label>
         <input
           type="text"
@@ -116,7 +117,7 @@ export default function ContactForm() {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          className={`w-full px-4 py-3 bg-[#0A0A0A]/50 border rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all ${
+          className={`w-full px-4 py-3 bg-[#020817]/50 border rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#06B6D4] focus:ring-2 focus:ring-[#06B6D4]/15 transition-all ${
             errors.name ? 'border-red-500/50' : 'border-white/5'
           }`}
           placeholder="Your Name"
@@ -127,7 +128,7 @@ export default function ContactForm() {
       {/* Email */}
       <div>
         <label htmlFor="email" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 font-mono">
-          Email <span className="text-[#FF1A1A]">*</span>
+          Email <span className="text-[#06B6D4]">*</span>
         </label>
         <input
           type="email"
@@ -135,7 +136,7 @@ export default function ContactForm() {
           name="email"
           value={formData.email}
           onChange={handleChange}
-          className={`w-full px-4 py-3 bg-[#0A0A0A]/50 border rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all ${
+          className={`w-full px-4 py-3 bg-[#020817]/50 border rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#06B6D4] focus:ring-2 focus:ring-[#06B6D4]/15 transition-all ${
             errors.email ? 'border-red-500/50' : 'border-white/5'
           }`}
           placeholder="your.email@example.com"
@@ -146,7 +147,7 @@ export default function ContactForm() {
       {/* WhatsApp Number (Optional) */}
       <div>
         <label htmlFor="whatsapp" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 font-mono">
-          WhatsApp Number <span className="text-gray-650 text-[10px] font-normal lowercase">(optional)</span>
+          WhatsApp Number <span className="text-gray-500 text-[10px] font-normal lowercase">(optional)</span>
         </label>
         <input
           type="text"
@@ -154,7 +155,7 @@ export default function ContactForm() {
           name="whatsapp"
           value={formData.whatsapp}
           onChange={handleChange}
-          className="w-full px-4 py-3 bg-[#0A0A0A]/50 border border-white/5 rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all"
+          className="w-full px-4 py-3 bg-[#020817]/50 border border-white/5 rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#06B6D4] focus:ring-2 focus:ring-[#06B6D4]/15 transition-all"
           placeholder="+92 300 1234567"
         />
       </div>
@@ -169,7 +170,7 @@ export default function ContactForm() {
           name="inquiryType"
           value={formData.inquiryType}
           onChange={handleChange}
-          className="w-full px-4 py-3 bg-[#121212] border border-white/5 rounded-lg text-white font-sans focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all"
+          className="w-full px-4 py-3 bg-[#020817] border border-white/5 rounded-lg text-white font-sans focus:outline-none focus:border-[#06B6D4] focus:ring-2 focus:ring-[#06B6D4]/15 transition-all"
         >
           <option value="Internship Opportunity">Internship Opportunity</option>
           <option value="Project Collaboration">Project Collaboration</option>
@@ -180,7 +181,7 @@ export default function ContactForm() {
       {/* Message */}
       <div>
         <label htmlFor="message" className="block text-xs font-bold uppercase tracking-widest text-gray-400 mb-2 font-mono">
-          Message <span className="text-[#FF1A1A]">*</span>
+          Message <span className="text-[#06B6D4]">*</span>
         </label>
         <textarea
           id="message"
@@ -188,7 +189,7 @@ export default function ContactForm() {
           rows={5}
           value={formData.message}
           onChange={handleChange}
-          className={`w-full px-4 py-3 bg-[#0A0A0A]/50 border rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all resize-none ${
+          className={`w-full px-4 py-3 bg-[#020817]/50 border rounded-lg text-white font-sans placeholder-gray-600 focus:outline-none focus:border-[#06B6D4] focus:ring-2 focus:ring-[#06B6D4]/15 transition-all resize-none ${
             errors.message ? 'border-red-500/50' : 'border-white/5'
           }`}
           placeholder="Write your message here..."
@@ -206,7 +207,7 @@ export default function ContactForm() {
       <button
         type="submit"
         disabled={submitStatus === 'submitting'}
-        className="w-full py-4 text-xs font-bold uppercase tracking-widest rounded-lg border border-[#FF1A1A] text-white bg-[#FF1A1A] hover:bg-[#E53935] disabled:bg-[#FF1A1A]/50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all font-mono shadow-md shadow-[#FF1A1A]/10 cursor-pointer hover:shadow-red-500/20"
+        className="w-full py-4 text-xs font-bold uppercase tracking-widest rounded-lg border border-[#06B6D4] text-white bg-[#06B6D4] hover:bg-[#0891B2] disabled:bg-[#06B6D4]/50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 transition-all font-mono shadow-md shadow-[#06B6D4]/10 cursor-pointer hover:shadow-[#06B6D4]/30"
       >
         {submitStatus === 'submitting' ? (
           <>

@@ -1,78 +1,89 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls } from '@react-three/drei';
+import * as THREE from 'three';
 
 function FloatingMesh() {
   const meshRef = useRef();
-  const wireframeRef = useRef();
+  const mouse = useRef({ x: 0, y: 0 });
+
+  // Track mouse coordinates on window
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      mouse.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouse.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+    };
+    window.addEventListener('mousemove', handleMouseMove);
+    return () => window.removeEventListener('mousemove', handleMouseMove);
+  }, []);
 
   useFrame((state, delta) => {
     const clampedDelta = Math.min(delta, 0.1);
     const elapsed = state.clock.getElapsedTime();
 
-    // Slow auto-rotation
-    if (meshRef.current && wireframeRef.current) {
-      meshRef.current.rotation.y += 0.12 * clampedDelta;
-      meshRef.current.rotation.x += 0.08 * clampedDelta;
+    if (meshRef.current) {
+      // Slow auto-rotation on Y and X
+      meshRef.current.rotation.y += 0.08 * clampedDelta;
+      meshRef.current.rotation.x += 0.04 * clampedDelta;
 
-      wireframeRef.current.rotation.y += 0.12 * clampedDelta;
-      wireframeRef.current.rotation.x += 0.08 * clampedDelta;
+      // Subtle mouse tilt with smooth lerp
+      const targetX = mouse.current.y * 0.3;
+      const targetY = mouse.current.x * 0.3;
 
-      // Floating sine wave animation
-      const hover = Math.sin(elapsed * 1.5) * 0.2;
-      meshRef.current.position.y = hover;
-      wireframeRef.current.position.y = hover;
+      meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, targetX + elapsed * 0.04, 0.08);
+      meshRef.current.rotation.y = THREE.MathUtils.lerp(meshRef.current.rotation.y, targetY + elapsed * 0.08, 0.08);
+
+      // Slow vertical floating wave
+      meshRef.current.position.y = Math.sin(elapsed * 1.5) * 0.15;
     }
   });
 
   return (
-    <group>
-      {/* Inner semi-transparent solid shape */}
-      <mesh ref={meshRef}>
-        <icosahedronGeometry args={[2.3, 1]} />
-        <meshStandardMaterial 
-          color="#0F1123" 
-          roughness={0.15} 
-          metalness={0.8}
-          transparent={true}
-          opacity={0.7}
-        />
-      </mesh>
-
-      {/* Outer wireframe overlay */}
-      <mesh ref={wireframeRef}>
-        <icosahedronGeometry args={[2.32, 1]} />
-        <meshBasicMaterial 
-          color="#E91E63" 
-          wireframe={true} 
-          transparent={true} 
-          opacity={0.75} 
-        />
-      </mesh>
-    </group>
+    <mesh ref={meshRef}>
+      <icosahedronGeometry args={[2.0, 1]} />
+      {/* Cyan low-poly wireframe sphere */}
+      <meshBasicMaterial 
+        color="#06B6D4" 
+        wireframe={true} 
+        transparent={true} 
+        opacity={0.65} 
+      />
+    </mesh>
   );
 }
 
 export default function Hero3D() {
   return (
-    <div className="w-full h-[350px] md:h-[450px] relative cursor-grab active:cursor-grabbing">
-      <Canvas 
-        camera={{ position: [0, 0, 5.5], fov: 50 }} 
-        dpr={[1, 2]}
-      >
-        <ambientLight intensity={0.5} />
-        {/* Environmental Lights */}
-        <pointLight position={[8, 8, 8]} intensity={1.5} color="#E91E63" />
-        <pointLight position={[-8, -8, -8]} intensity={0.5} color="#C2185B" />
-        {/* Glow light source inside the object */}
-        <pointLight position={[0, 0, 0]} intensity={3.5} color="#E91E63" distance={5} />
-        
-        <FloatingMesh />
-        <OrbitControls 
-          enableZoom={false} 
-          enablePan={false}
-        />
-      </Canvas>
+    <div className="w-full h-full relative flex items-center justify-center">
+      {/* Soft radial glow behind the panel */}
+      <div 
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: 'radial-gradient(circle, rgba(6,182,212,0.12) 0%, transparent 65%)',
+          zIndex: 0
+        }}
+      />
+
+      <div className="w-full h-[320px] md:h-[400px] relative z-10">
+        <Canvas 
+          camera={{ position: [0, 0, 5.0], fov: 50 }} 
+          dpr={[1, 2]}
+        >
+          <ambientLight intensity={0.8} />
+          {/* Ambient + point lights in cyan for glow effect */}
+          <pointLight position={[8, 8, 8]} intensity={2.5} color="#06B6D4" />
+          <pointLight position={[-8, -8, -8]} intensity={1.5} color="#3B82F6" />
+          <pointLight position={[0, 0, 0]} intensity={3.5} color="#06B6D4" distance={6} />
+          
+          <FloatingMesh />
+          <OrbitControls 
+            enableZoom={false} 
+            enablePan={false}
+            enableDamping={true}
+            dampingFactor={0.05}
+          />
+        </Canvas>
+      </div>
     </div>
   );
 }

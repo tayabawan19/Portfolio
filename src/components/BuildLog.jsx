@@ -164,7 +164,7 @@ export default function BuildLog() {
   const getStatusColor = (status) => {
     switch (status) {
       case 'completed': return 'text-emerald-400 bg-emerald-950/30 border-emerald-500/20';
-      case 'in-progress': return 'text-[#FF1A1A] bg-[#FF1A1A]/10 border-[#FF1A1A]/20';
+      case 'in-progress': return 'text-[#06B6D4] bg-[#06B6D4]/10 border-[#06B6D4]/20';
       default: return 'text-gray-400 bg-gray-900/40 border-white/5';
     }
   };
@@ -177,27 +177,27 @@ export default function BuildLog() {
         <div className="flex items-center space-x-4">
           <a 
             href="/"
-            className="p-2.5 bg-[#121212] border border-white/5 hover:border-red-500/30 hover:bg-[#FF1A1A]/5 rounded-xl transition-all duration-300 text-gray-400 hover:text-white"
+            className="p-2.5 bg-[#020817] border border-white/5 hover:border-[#06B6D4]/30 hover:bg-[#06B6D4]/5 rounded-xl transition-all duration-300 text-gray-400 hover:text-white"
           >
             <ArrowLeft size={18} />
           </a>
           <div>
-            <span className="text-[10px] md:text-xs font-bold font-mono tracking-[0.25em] text-[#FF1A1A] uppercase">
-              AI ENGINEERING JOURNAL
+            <span className="text-[10px] md:text-xs font-bold font-mono tracking-[0.25em] text-[#06B6D4] uppercase">
+              ◆ AI ENGINEERING JOURNAL ◆
             </span>
             <h1 className="text-3xl md:text-5xl font-bold font-display uppercase tracking-wide text-white mt-1">
-              BUILD <span className="text-[#FF1A1A]">LOG</span>
+              BUILD <span className="text-[#06B6D4]">LOG</span>
             </h1>
           </div>
         </div>
 
         {/* View Switcher Button */}
-        <div className="flex items-center bg-[#121212] border border-white/5 p-1 rounded-xl">
+        <div className="flex items-center bg-[#020817] border border-white/5 p-1 rounded-xl">
           <button
             onClick={() => setView('dashboard')}
             className={`flex items-center space-x-1.5 px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
               view === 'dashboard'
-                ? 'bg-[#FF1A1A] text-white shadow-md shadow-[#FF1A1A]/25'
+                ? 'bg-[#06B6D4] text-white shadow-md shadow-[#06B6D4]/25'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -208,7 +208,7 @@ export default function BuildLog() {
             onClick={() => setView('timeline')}
             className={`flex items-center space-x-1.5 px-4 py-2 text-xs font-bold font-mono uppercase tracking-wider rounded-lg transition-all cursor-pointer ${
               view === 'timeline'
-                ? 'bg-[#FF1A1A] text-white shadow-md shadow-[#FF1A1A]/25'
+                ? 'bg-[#06B6D4] text-white shadow-md shadow-[#06B6D4]/25'
                 : 'text-gray-400 hover:text-white'
             }`}
           >
@@ -221,8 +221,8 @@ export default function BuildLog() {
       {/* Stats Cards Row */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
         {/* Progress Card */}
-        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#121212] flex items-center space-x-4">
-          <div className="p-3 bg-[#FF1A1A]/10 text-[#FF1A1A] rounded-xl">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#020817]/40 flex items-center space-x-4">
+          <div className="p-3 bg-[#06B6D4]/10 text-[#06B6D4] rounded-xl">
             <TrendingUp size={20} />
           </div>
           <div>
@@ -232,7 +232,7 @@ export default function BuildLog() {
         </div>
 
         {/* Days Completed Card */}
-        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#121212] flex items-center space-x-4">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#020817]/40 flex items-center space-x-4">
           <div className="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl">
             <Clock size={20} />
           </div>
@@ -243,7 +243,7 @@ export default function BuildLog() {
         </div>
 
         {/* Projects Finished Card */}
-        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#121212] flex items-center space-x-4">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#020817]/40 flex items-center space-x-4">
           <div className="p-3 bg-purple-500/10 text-purple-400 rounded-xl">
             <Award size={20} />
           </div>
@@ -254,7 +254,7 @@ export default function BuildLog() {
         </div>
 
         {/* Current Phase Card */}
-        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#121212] flex items-center space-x-4">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#020817]/40 flex items-center space-x-4">
           <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl">
             <Layers size={20} />
           </div>
@@ -283,7 +283,7 @@ export default function BuildLog() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                className="glass-card rounded-2xl border border-white/5 bg-[#121212] overflow-hidden"
+                className="glass-card rounded-2xl border border-white/5 bg-[#020817]/40 overflow-hidden"
               >
                 {/* Phase Header */}
                 <div 
@@ -306,10 +306,10 @@ export default function BuildLog() {
 
                   {/* Progress Bar Container */}
                   <div className="flex items-center space-x-6 min-w-[200px] md:min-w-[280px]">
-                    <div className="w-full bg-[#0A0A0A] h-2 rounded-full overflow-hidden border border-white/5">
+                    <div className="w-full bg-[#020817] h-2 rounded-full overflow-hidden border border-white/5">
                       <div 
                         className={`h-full rounded-full transition-all duration-1000 ${
-                          phase.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 'bg-gradient-to-r from-[#FF1A1A] to-[#E53935]'
+                          phase.status === 'completed' ? 'bg-gradient-to-r from-emerald-500 to-emerald-400' : 'bg-gradient-to-r from-[#06B6D4] to-[#3B82F6]'
                         }`}
                         style={{ width: `${phase.progress}%` }}
                       ></div>
@@ -325,19 +325,19 @@ export default function BuildLog() {
 
                 {/* Expanded Details */}
                 {expandedPhase[phase.id] && (
-                  <div className="px-6 pb-6 md:px-8 md:pb-8 pt-2 border-t border-white/5 bg-[#0A0A0A]/40 space-y-6">
+                  <div className="px-6 pb-6 md:px-8 md:pb-8 pt-2 border-t border-white/5 bg-[#020817]/20 space-y-6">
                     
                     {/* Projects Section */}
                     {phase.projects.length > 0 && (
                       <div className="space-y-3">
-                        <h4 className="text-[10px] font-mono font-bold tracking-widest text-[#FF1A1A] uppercase">
+                        <h4 className="text-[10px] font-mono font-bold tracking-widest text-[#06B6D4] uppercase">
                           PHASE PROJECTS
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           {phase.projects.map((proj, pIdx) => (
                             <div 
                               key={pIdx}
-                              className="p-5 bg-[#121212]/90 border border-white/5 rounded-xl hover:border-red-500/20 transition-all duration-300 flex flex-col justify-between"
+                              className="p-5 bg-white/[0.02] border border-white/5 rounded-xl hover:border-[#06B6D4]/30 hover:bg-[#06B6D4]/[0.02] transition-all duration-300 flex flex-col justify-between"
                             >
                               <div>
                                 <div className="flex items-center justify-between">
@@ -348,7 +348,7 @@ export default function BuildLog() {
                                     {proj.built}
                                   </span>
                                 </div>
-                                <p className="text-xs text-gray-400 font-sans mt-1.5 leading-relaxed">
+                                <p className="text-xs text-gray-450 font-sans mt-1.5 leading-relaxed">
                                   {proj.description}
                                 </p>
                                 <div className="flex flex-wrap gap-1.5 mt-3">
@@ -365,7 +365,7 @@ export default function BuildLog() {
                                     href={proj.github} 
                                     target="_blank" 
                                     rel="noreferrer"
-                                    className="flex items-center space-x-1.5 text-[10px] font-mono font-bold text-[#FF1A1A] hover:text-[#E53935] tracking-widest uppercase transition-colors"
+                                    className="flex items-center space-x-1.5 text-[10px] font-mono font-bold text-[#06B6D4] hover:text-[#0891B2] tracking-widest uppercase transition-colors"
                                   >
                                     <GitHubIcon size={12} />
                                     <span>Code Repository</span>
@@ -381,7 +381,7 @@ export default function BuildLog() {
                     {/* Day-by-Day Topics */}
                     <div className="space-y-3">
                       <h4 className="text-[10px] font-mono font-bold tracking-widest text-gray-500 uppercase">
-                        CURRICULUM TOPICS
+                        PHASE DAILY LOG
                       </h4>
                       {phase.days.length === 0 ? (
                         <p className="text-xs text-gray-600 font-mono italic">No topics scheduled yet.</p>
@@ -401,8 +401,8 @@ export default function BuildLog() {
                                 {...extraProps}
                                 className={`p-3 border rounded-lg flex items-center space-x-3 transition-colors ${
                                   dayObj.completed 
-                                    ? 'bg-[#121212]/50 border-emerald-500/10 text-gray-300 hover:border-red-500/20 hover:bg-[#121212]/80 cursor-pointer' 
-                                    : 'bg-[#121212]/20 border-white/5 text-gray-500'
+                                    ? 'bg-white/[0.02] border-[#06B6D4]/10 text-gray-300 hover:border-[#06B6D4]/35 hover:bg-[#06B6D4]/[0.02] cursor-pointer' 
+                                    : 'bg-[#020817]/20 border-white/5 text-gray-500'
                                 }`}
                               >
                                 <div>
@@ -414,7 +414,7 @@ export default function BuildLog() {
                                 </div>
                                 <div className="min-w-0 flex-1">
                                   <span className={`block text-[9px] font-mono uppercase tracking-wider ${
-                                    dayObj.completed ? 'text-[#FF1A1A]' : 'text-gray-600'
+                                    dayObj.completed ? 'text-[#06B6D4]' : 'text-gray-600'
                                   }`}>
                                     Day {dayObj.day}
                                   </span>
@@ -448,8 +448,8 @@ export default function BuildLog() {
             transition={{ duration: 0.4 }}
             className="relative w-full max-w-4xl mx-auto mt-6"
           >
-            {/* Center glowing red vertical timeline divider line */}
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#FF1A1A] via-[#E53935] to-[#FF1A1A]/20 shadow-[0_0_10px_rgba(255,26,26,0.3)] transform -translate-x-1/2"></div>
+            {/* Center glowing cyan vertical timeline divider line */}
+            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-[2px] bg-gradient-to-b from-[#06B6D4] via-[#3B82F6] to-[#06B6D4]/20 shadow-[0_0_10px_rgba(6,182,212,0.3)] transform -translate-x-1/2"></div>
 
             <div className="space-y-8">
               {phasesData.flatMap(phase => 
@@ -475,34 +475,34 @@ export default function BuildLog() {
                     {/* Glowing Icon Node */}
                     <div className={`absolute left-4 md:left-1/2 w-6 h-6 rounded-full border-2 flex items-center justify-center transform -translate-x-1/2 z-10 transition-all duration-300 ${
                       dayObj.completed
-                        ? 'bg-[#0A0A0A] border-[#FF1A1A] shadow-[0_0_8px_rgba(255,26,26,0.4)]'
-                        : 'bg-[#121212] border-gray-800'
+                        ? 'bg-[#020817] border-[#06B6D4] shadow-[0_0_8px_rgba(6,182,212,0.4)]'
+                        : 'bg-[#020817] border-gray-800'
                     }`}>
                       {dayObj.completed ? (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#FF1A1A]"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#06B6D4]"></div>
                       ) : (
-                        <div className="w-1.5 h-1.5 rounded-full bg-gray-800"></div>
+                        <div className="w-1.5 h-1.5 rounded-full bg-gray-850"></div>
                       )}
                     </div>
 
                     {/* Left or Right Content Card */}
                     <div className={`w-full md:w-[46%] pl-12 md:pl-0 ${
-                      dayObj.day % 2 === 1 ? 'md:text-right md:pr-6' : 'md:order-last md:pl-6 text-left'
+                      dayObj.day % 2 === 1 ? 'md:text-right md:pr-6 text-left' : 'md:order-last md:pl-6 text-left'
                     }`}>
                       <DayCard 
                         {...cardProps}
                         className={`block glass-card p-5 rounded-xl border transition-all duration-300 ${
                           dayObj.completed 
-                            ? 'border-white/5 bg-[#121212] hover:border-red-500/30' 
-                            : 'border-white/5 bg-[#121212]/30 opacity-60'
+                            ? 'border-white/5 bg-[#020817]/40 hover:border-[#06B6D4]/30' 
+                            : 'border-white/5 bg-[#020817]/10 opacity-60'
                         }`}
                       >
                         <div className={`flex items-center gap-2 mb-1.5 ${
-                          dayObj.day % 2 === 1 ? 'md:justify-end' : 'justify-start'
+                          dayObj.day % 2 === 1 ? 'md:justify-end justify-start' : 'justify-start'
                         }`}>
                           <span className={`px-2 py-0.5 text-[8px] font-mono font-bold tracking-wider rounded uppercase ${
                             dayObj.completed 
-                              ? 'bg-[#FF1A1A]/10 text-[#FF1A1A] border border-[#FF1A1A]/20' 
+                              ? 'bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20' 
                               : 'bg-gray-900/60 text-gray-500 border border-white/5'
                           }`}>
                             DAY {dayObj.day}
@@ -512,9 +512,11 @@ export default function BuildLog() {
                           </span>
                         </div>
                         
-                        <h3 className="text-sm font-bold font-display text-white tracking-wide uppercase flex items-center gap-1.5 justify-start md:justify-items-stretch">
+                        <h3 className={`text-sm font-bold font-display text-white tracking-wide uppercase flex items-center gap-1.5 ${
+                          dayObj.day % 2 === 1 ? 'md:justify-end justify-start' : 'justify-start'
+                        }`}>
                           <span>{dayObj.topic}</span>
-                          {isClickable && <ExternalLink size={10} className="text-[#FF1A1A] inline" />}
+                          {isClickable && <ExternalLink size={10} className="text-[#06B6D4]" />}
                         </h3>
                         <p className="text-[9px] font-mono text-gray-500 mt-1 uppercase">
                           {dayObj.phaseTitle.split(":")[0]}

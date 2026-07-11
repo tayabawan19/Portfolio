@@ -330,7 +330,7 @@ export default function ChatbotWidget() {
                 >
                   <div
                     className={`px-3.5 py-2 rounded-2xl text-xs sm:text-sm font-sans leading-relaxed whitespace-pre-line max-w-[85%] ${msg.sender === 'user'
-                        ? 'bg-[#FF1A1A] text-white rounded-tr-none shadow-md shadow-[#FF1A1A]/10'
+                        ? 'bg-[#06B6D4] text-white rounded-tr-none shadow-md shadow-[#06B6D4]/10'
                         : 'bg-white/5 border border-white/5 text-gray-300 rounded-tl-none'
                       }`}
                   >
@@ -359,7 +359,7 @@ export default function ChatbotWidget() {
                 <button
                   key={idx}
                   onClick={() => handleSendMessage(q)}
-                  className="px-2.5 py-1 text-[11px] font-sans font-medium rounded-full bg-white/5 text-gray-400 border border-white/5 hover:border-[#FF1A1A]/30 hover:text-[#FF1A1A] hover:bg-[#FF1A1A]/5 transition-all text-left cursor-pointer"
+                  className="px-2.5 py-1 text-[11px] font-sans font-medium rounded-full bg-white/5 text-gray-400 border border-white/5 hover:border-[#06B6D4]/30 hover:text-[#06B6D4] hover:bg-[#06B6D4]/5 transition-all text-left cursor-pointer"
                 >
                   {q}
                 </button>
@@ -379,11 +379,11 @@ export default function ChatbotWidget() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ask a question..."
-                className="flex-1 bg-[#121212] border border-white/5 rounded-lg px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#FF1A1A] focus:ring-1 focus:ring-[#FF1A1A] transition-all"
+                className="flex-1 bg-[#121212] border border-white/5 rounded-lg px-3 py-2 text-xs sm:text-sm text-white placeholder-gray-600 focus:outline-none focus:border-[#06B6D4] focus:ring-1 focus:ring-[#06B6D4] transition-all"
               />
               <button
                 type="submit"
-                className="p-2 bg-[#FF1A1A] hover:bg-[#E53935] text-white rounded-lg transition-colors shadow-md shadow-[#FF1A1A]/10 flex items-center justify-center cursor-pointer"
+                className="p-2 bg-[#06B6D4] hover:bg-[#0891B2] text-white rounded-lg transition-colors shadow-md shadow-[#06B6D4]/10 flex items-center justify-center cursor-pointer"
                 aria-label="Send Message"
               >
                 <Send size={16} />
@@ -398,7 +398,7 @@ export default function ChatbotWidget() {
         onClick={() => setIsOpen(!isOpen)}
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.95 }}
-        className="w-14 h-14 bg-[#FF1A1A] hover:bg-[#E53935] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#FF1A1A]/25 cursor-pointer transition-colors relative"
+        className="w-14 h-14 bg-[#06B6D4] hover:bg-[#0891B2] text-white rounded-full flex items-center justify-center shadow-lg shadow-[#06B6D4]/25 cursor-pointer transition-colors relative"
         aria-label="Toggle assistant widget"
       >
         <MessageSquare size={24} className="stroke-[2px]" />

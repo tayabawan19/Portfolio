@@ -14,31 +14,31 @@ const servicesList = [
     num: "01",
     title: "Full-Stack Web Development",
     desc: "Designing and engineering responsive, high-performance web applications. Expertise in React, Node.js, Express, REST APIs, and database modeling.",
-    gradient: "from-[#FF1A1A]/10 to-[#121212]"
+    gradient: "from-[#06B6D4]/10 to-[#020817]"
   },
   {
     num: "02",
     title: "Mobile App Development",
     desc: "Developing cross-platform mobile apps using React Native and Expo. Implementing live GPS tracking, OTP auth, local storage, and push notifications.",
-    gradient: "from-[#FF1A1A]/5 to-[#121212]"
+    gradient: "from-[#3B82F6]/10 to-[#020817]"
   },
   {
     num: "03",
     title: "AI-Powered Data Analysis",
     desc: "Leveraging Python and data analysis paradigms. Focused on cleaning, parsing datasets, generating statistical models, and creating automated visual reports.",
-    gradient: "from-[#E53935]/10 to-[#121212]"
+    gradient: "from-[#8B5CF6]/10 to-[#020817]"
   },
   {
     num: "04",
     title: "Software Documentation & SRS",
     desc: "Authored system models using Agile processes, including full Software Requirements Specifications (SRS), Software Design Documents (SDD), and UML architectures.",
-    gradient: "from-[#FF1A1A]/8 to-[#121212]"
+    gradient: "from-[#06B6D4]/8 to-[#020817]"
   },
   {
     num: "05",
     title: "E-Commerce Solutions",
     desc: "Launching custom operational e-commerce stores with WooCommerce and WordPress, including advanced checkout flows, payment processing, and SEO setups.",
-    gradient: "from-[#E53935]/5 to-[#121212]"
+    gradient: "from-[#3B82F6]/5 to-[#020817]"
   }
 ];
 
@@ -86,7 +86,7 @@ export default function ServicesCarousel() {
               <div 
                 className={`glass-card rounded-2xl border border-white/5 p-8 flex flex-col justify-between h-[360px] relative overflow-hidden bg-gradient-to-br ${service.gradient} transition-transform duration-500 ${
                   isActive 
-                    ? 'scale-105 border-red-500/30 shadow-[0_15px_40px_-15px_rgba(255,26,26,0.25)]' 
+                    ? 'scale-105 border-[#06B6D4]/40 shadow-[0_15px_40px_-15px_rgba(6,182,212,0.25)]' 
                     : 'scale-90 opacity-60'
                 }`}
               >
@@ -103,11 +103,11 @@ export default function ServicesCarousel() {
                 </div>
 
                 {/* Service Info */}
-                <div className="my-auto space-y-4">
+                <div className="my-auto space-y-4 text-left">
                   <h3 className="text-2xl font-bold font-display text-white tracking-wide">
                     {service.title}
                   </h3>
-                  <p className="text-sm text-gray-400 font-sans leading-relaxed">
+                  <p className="text-sm text-white/55 font-sans leading-relaxed">
                     {service.desc}
                   </p>
                 </div>
@@ -116,18 +116,22 @@ export default function ServicesCarousel() {
                 <div className="w-full text-left">
                   <a
                     href="#contact"
-                    className="text-xs font-mono font-bold tracking-wider text-red-500 hover:text-white transition-colors duration-300 flex items-center space-x-1.5 group"
+                    className="text-xs font-mono font-bold tracking-wider text-[#06B6D4] hover:text-white transition-colors duration-300 flex items-center space-x-1.5 group"
                     onClick={(e) => {
                       e.preventDefault();
                       const contactSection = document.querySelector('#contact');
                       if (contactSection) {
-                        const offset = 80;
-                        const bodyRect = document.body.getBoundingClientRect().top;
-                        const elementRect = contactSection.getBoundingClientRect().top;
-                        window.scrollTo({
-                          top: elementRect - bodyRect - offset,
-                          behavior: 'smooth'
-                        });
+                        if (window.lenis) {
+                          window.lenis.scrollTo(contactSection, { offset: -80, duration: 1.2 });
+                        } else {
+                          const offset = 80;
+                          const bodyRect = document.body.getBoundingClientRect().top;
+                          const elementRect = contactSection.getBoundingClientRect().top;
+                          window.scrollTo({
+                            top: elementRect - bodyRect - offset,
+                            behavior: 'smooth'
+                          });
+                        }
                       }
                     }}
                   >
@@ -144,7 +148,7 @@ export default function ServicesCarousel() {
       <div className="flex justify-between items-center w-full max-w-xs mx-auto mt-8">
         {/* Left Arrow Button */}
         <button 
-          className="custom-swiper-prev p-3 border border-white/10 hover:border-red-500/50 bg-[#0C0C0C] text-gray-400 hover:text-white rounded-full transition-all cursor-pointer hover:shadow-[0_0_15px_-3px_rgba(255,26,26,0.3)] z-10"
+          className="custom-swiper-prev p-3 border border-white/10 hover:border-[#06B6D4]/50 bg-[#020817] text-gray-400 hover:text-white rounded-full transition-all cursor-pointer hover:shadow-[0_0_15px_-3px_rgba(6,182,212,0.3)] z-10"
           aria-label="Previous Slide"
         >
           <ChevronLeft size={20} />
@@ -157,7 +161,7 @@ export default function ServicesCarousel() {
 
         {/* Right Arrow Button */}
         <button 
-          className="custom-swiper-next p-3 border border-white/10 hover:border-red-500/50 bg-[#0C0C0C] text-gray-400 hover:text-white rounded-full transition-all cursor-pointer hover:shadow-[0_0_15px_-3px_rgba(255,26,26,0.3)] z-10"
+          className="custom-swiper-next p-3 border border-white/10 hover:border-[#06B6D4]/50 bg-[#020817] text-gray-400 hover:text-white rounded-full transition-all cursor-pointer hover:shadow-[0_0_15px_-3px_rgba(6,182,212,0.3)] z-10"
           aria-label="Next Slide"
         >
           <ChevronRight size={20} />
@@ -175,9 +179,9 @@ export default function ServicesCarousel() {
           border-radius: 9999px;
         }
         .custom-swiper-pagination .swiper-pagination-bullet-active {
-          background: #FF1A1A;
+          background: #06B6D4;
           width: 24px;
-          box-shadow: 0 0 10px rgba(255, 26, 26, 0.5);
+          box-shadow: 0 0 10px rgba(6, 182, 212, 0.5);
         }
       `}</style>
     </div>
