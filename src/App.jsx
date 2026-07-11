@@ -111,7 +111,7 @@ function RevealSection({ children, id, className = "" }) {
       id={id}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.01 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`py-20 px-6 md:px-12 max-w-7xl mx-auto scroll-mt-20 relative ${className}`}
     >
@@ -610,7 +610,7 @@ function LandingPage() {
             <motion.div 
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, amount: 0.1 }}
+              viewport={{ once: true, amount: 0.01 }}
               variants={{
                 hidden: { opacity: 0 },
                 visible: {
@@ -689,7 +689,7 @@ function LandingPage() {
               <motion.div 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.01 }}
                 variants={{
                   hidden: { opacity: 0, x: -40 },
                   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -744,7 +744,7 @@ function LandingPage() {
               <motion.div 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.01 }}
                 variants={{
                   hidden: { opacity: 0, x: 40 },
                   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -787,7 +787,7 @@ function LandingPage() {
               <motion.div 
                 initial="hidden"
                 whileInView="visible"
-                viewport={{ once: true, amount: 0.3 }}
+                viewport={{ once: true, amount: 0.01 }}
                 variants={{
                   hidden: { opacity: 0, x: -40 },
                   visible: { opacity: 1, x: 0, transition: { duration: 0.6, ease: "easeOut" } }
@@ -826,7 +826,7 @@ function LandingPage() {
         <motion.div 
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.05 }}
+          viewport={{ once: true, amount: 0.01 }}
           variants={{
             hidden: { opacity: 0 },
             visible: {

@@ -7,7 +7,7 @@ export default function SectionWrapper({ children, id, className = "" }) {
       id={id}
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.01 }}
       transition={{ duration: 0.8, ease: "easeOut" }}
       className={`py-24 px-6 md:px-12 max-w-7xl mx-auto scroll-mt-20 relative ${className}`}
     >
