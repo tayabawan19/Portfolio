@@ -177,6 +177,7 @@ import zenpayOTP from './assets/zenpay/otp.jpg';
 import zenpayHome from './assets/zenpay/home.jpg';
 import zenpayCard from './assets/zenpay/card.jpg';
 import zenpayProfile from './assets/zenpay/profile.jpg';
+import prooffolioDemo from './assets/prooffolio/demo.mp4';
 import ContactForm from './components/ContactForm';
 import ChatbotWidget from './components/ChatbotWidget';
 
@@ -192,6 +193,30 @@ function LandingPage() {
 
   // Projects dataset mapping
   const projectsList = [
+    {
+      title: "ProofFolio — AI-Powered Student Project Marketplace",
+      description: "A two-sided marketplace where students showcase real, working software and companies discover them to hire, license, or acquire — with Google Gemini AI auto-evaluating every submission and generating a maturity score, technical breakdown, and startup-style pitch.",
+      tags: ["Next.js", "Supabase", "PostgreSQL", "Gemini AI", "Framer Motion", "GSAP", "Node.js", "Brevo API", "Vercel"],
+      liveLink: "https://prooffolio-five.vercel.app/",
+      icon: Briefcase,
+      gradientText: "Sole Developer & Product Owner",
+      bgGradient: "from-[#06B6D4]/15 via-[#020817] to-[#020817]",
+      accentColor: "#06B6D4",
+      isFlagship: true,
+      video: prooffolioDemo,
+      achievements: [
+        "Built a two-sided marketplace: student project submission & management, company-side discovery with search/filter by category, tech stack, and AI maturity score",
+        "Integrated Google Gemini API (gemini-2.5-flash) as the AI evaluation engine — structured JSON prompting generates summary, technical breakdown, maturity score, complexity rating, and startup pitch per project",
+        "Built production-grade custom OTP email verification (6-digit, 5-min expiry) via direct Brevo API — bypassing SMTP entirely for reliability",
+        "Implemented real-time messaging with Supabase Realtime WebSockets — live delivery, ephemeral typing indicators, read receipts, and presence",
+        "Enforced Row Level Security (RLS) across all PostgreSQL tables — per-user data access at the database level via auth.uid() Postgres policies",
+        "Built GitHub integration for live repo stat fetching (stars, last updated) via GitHub public API",
+        "Designed referral system — successful referrals unlock Featured placement for the referrer's next project",
+        "Built AI-powered agreement generation — Gemini drafts a licensing/hiring agreement on deal closure, exportable as PDF",
+        "Debugged and resolved full SMTP delivery chain failure — re-architected to direct Brevo API calls",
+        "Migrated messaging from polling to WebSocket-based real-time chat mid-development"
+      ]
+    },
     {
       title: "ZenPay — Premium Fintech Mobile App",
       description: "ZenPay is a production-grade, full-stack fintech mobile application built with React Native & Expo, designed to simulate a modern digital wallet and payment platform inspired by apps like Revolut, JazzCash, and Cashly.",
@@ -342,10 +367,10 @@ function LandingPage() {
   // Skill sets grouped
   const skillCategories = [
     { title: "Languages", skills: ["Java", "C++", "Python", "TypeScript"] },
-    { title: "Mobile/Frontend", skills: ["React Native", "Expo", "React"] },
-    { title: "Backend", skills: ["Node.js", "Express", "REST API", "JWT"] },
-    { title: "Cloud & Auth", skills: ["Firebase Auth", "Cloud Firestore", "Stripe API", "EAS Build", "Render"] },
-    { title: "Databases", skills: ["MongoDB", "Oracle SQL", "Aggregation Pipelines", "Index Optimization"] },
+    { title: "Mobile/Frontend", skills: ["React Native", "Expo", "React", "Next.js", "GSAP"] },
+    { title: "Backend", skills: ["Node.js", "Express", "REST API", "JWT", "Gemini API", "Brevo API"] },
+    { title: "Cloud & Auth", skills: ["Firebase Auth", "Cloud Firestore", "Stripe API", "EAS Build", "Render", "Supabase Auth", "Supabase Realtime"] },
+    { title: "Databases", skills: ["MongoDB", "Oracle SQL", "Aggregation Pipelines", "Index Optimization", "Supabase", "PostgreSQL", "Row Level Security"] },
     { title: "Machine Learning", skills: ["Python (ML)", "Data Analysis", "Model Development", "Scikit-learn"] },
     { title: "Tools & Platforms", skills: ["VS Code", "Figma", "Canva", "WordPress", "Git", "GitHub"] },
     { title: "Concepts", skills: ["OOP", "Data Structures", "SDLC", "SRS/SDS Documentation"] }
@@ -557,7 +582,7 @@ function LandingPage() {
             {/* PROJECTS BUILT */}
             <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1">
               <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">
-                <StatCounter value="9" />
+                <StatCounter value="10" />
               </h4>
               <span className="text-[10px] font-bold font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">PROJECTS BUILT</span>
             </div>
@@ -861,6 +886,9 @@ function LandingPage() {
                   achievements={project.achievements}
                   screenshots={project.screenshots}
                   number={idx + 1}
+                  video={project.video}
+                  isFlagship={project.isFlagship}
+                  accentColor={project.accentColor}
                 />
               </Suspense>
             </motion.div>
