@@ -30,7 +30,7 @@ export const phasesData = [
     title: "Phase 1: Python Foundations",
     month: "July 2026",
     status: "in-progress",
-    progress: Math.round((11 / 14) * 100), // 79% of Phase 1 complete
+    progress: Math.round((14 / 14) * 100), // 100% of Phase 1 completed
     days: [
       { day: 1, topic: "Variables & Data Types", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day1.py" },
       { day: 2, topic: "Lists & Dictionaries", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day2.py" },
@@ -41,26 +41,41 @@ export const phasesData = [
       { day: 7, topic: "Classes & OOP", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day7.py" },
       { day: 8, topic: "Error Handling (try/except)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day8.py" },
       { day: 9, topic: "Working with JSON", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day9.py" },
-      { day: 10, topic: "Mini Project: ChatManager", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day10.py" },
-      { day: 11, topic: "Real AI API Integration using Groq + Llama 3.3 70B", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day11.py" },
-      { day: 12, topic: "Chatbot with Memory", completed: false },
-      { day: 13, topic: "Prompt Engineering", completed: false },
-      { day: 14, topic: "End-to-End AI App", completed: false }
+      { day: 10, topic: "Mini Project: ChatManager (CLI chatbot, JSON persistence, OOP)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day10.py" },
+      { day: 11, topic: "Real AI API Integration (Groq + Llama 3.3 70B)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day11.py" },
+      { day: 12, topic: "Chatbot with Memory (ChatManager + real Groq API, full conversation history resent each call)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day12.py" },
+      { day: 13, topic: "Prompt Engineering (zero-shot, few-shot, chain-of-thought, system/role prompting)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day13.py" },
+      { day: 14, topic: "End-to-End AI App: Personal AI Assistant CLI (capstone project — multi-mode personality system: tutor/casual/code, combining every concept from Days 1-13)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day14.py" }
     ],
     projects: [
       {
         name: "ChatManager CLI",
         built: "Day 10",
-        description: "A command-line chatbot with persistent memory using OOP, JSON file storage, and proper error handling. Saves and loads conversation history between sessions.",
+        description: "Command-line chatbot with persistent memory using OOP and JSON file storage.",
         tech: ["Python", "json", "datetime"],
         github: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day10.py"
       },
       {
         name: "First Real AI API Call",
         built: "Day 11",
-        description: "Connected to Groq's free API to call Llama 3.3 70B for the first time, replacing all previous fake/simulated AI responses with a real LLM.",
+        description: "Connected to Groq's free API to call Llama 3.3 70B for the first time.",
         tech: ["Python", "groq SDK", "python-dotenv"],
         github: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day11.py"
+      },
+      {
+        name: "Personal AI Assistant — Full-Stack Web App",
+        built: "Days 12-14",
+        description: "A real-time AI chat assistant with 3 selectable personality modes (tutor / casual / code), persistent multi-user chat history, and a custom name-entry flow so each visitor gets their own saved conversation. Started as a terminal app, rebuilt as a full-stack product with a FastAPI backend and a React frontend.",
+        tech: ["Python", "FastAPI", "Groq (Llama 3.3 70B)", "MongoDB Atlas", "React (Vite)"],
+        features: [
+          "mode switching mid-conversation",
+          "per-user persistent memory via MongoDB",
+          "prompt-engineered system prompts per mode",
+          "live typing indicator"
+        ],
+        github: "https://github.com/tayabawan19/AI-Projects",
+        status: "working locally, deployment to Render (backend) + Vercel (frontend) in progress — do NOT mark as \"live\" yet unless I say so explicitly in a future update",
+        featured: true
       }
     ]
   },
@@ -334,46 +349,84 @@ export default function BuildLog() {
                           PHASE PROJECTS
                         </h4>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          {phase.projects.map((proj, pIdx) => (
-                            <div 
-                              key={pIdx}
-                              className="p-5 bg-white/[0.02] border border-white/5 rounded-xl hover:border-[#06B6D4]/30 hover:bg-[#06B6D4]/[0.02] transition-all duration-300 flex flex-col justify-between"
-                            >
-                              <div>
-                                <div className="flex items-center justify-between">
-                                  <h5 className="text-base font-bold font-display text-white uppercase tracking-wider">
-                                    {proj.name}
-                                  </h5>
-                                  <span className="text-[9px] font-mono font-bold text-gray-500 uppercase px-1.5 py-0.5 border border-white/5 rounded">
-                                    {proj.built}
-                                  </span>
-                                </div>
-                                <p className="text-xs text-gray-450 font-sans mt-1.5 leading-relaxed">
-                                  {proj.description}
-                                </p>
-                                <div className="flex flex-wrap gap-1.5 mt-3">
-                                  {proj.tech.map((t, idx) => (
-                                    <span key={idx} className="text-[9px] font-mono bg-white/5 text-gray-400 px-2 py-0.5 rounded">
-                                      {t}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                              <div className="flex items-center space-x-4 mt-4 pt-3 border-t border-white/5">
-                                {proj.github && (
-                                  <a 
-                                    href={proj.github} 
-                                    target="_blank" 
-                                    rel="noreferrer"
-                                    className="flex items-center space-x-1.5 text-[10px] font-mono font-bold text-[#06B6D4] hover:text-[#0891B2] tracking-widest uppercase transition-colors"
-                                  >
-                                    <GitHubIcon size={12} />
-                                    <span>Code Repository</span>
-                                  </a>
+                          {phase.projects.map((proj, pIdx) => {
+                            const isFeatured = proj.featured;
+                            return (
+                              <div 
+                                key={pIdx}
+                                className={`p-5 rounded-xl transition-all duration-300 flex flex-col justify-between relative overflow-hidden ${
+                                  isFeatured 
+                                    ? 'md:col-span-2 bg-gradient-to-br from-[#06B6D4]/10 via-white/[0.02] to-transparent border-[#06B6D4]/30 hover:border-[#06B6D4]/50 shadow-[0_0_20px_rgba(6,182,212,0.1)]' 
+                                    : 'bg-white/[0.02] border border-white/5 hover:border-[#06B6D4]/30 hover:bg-[#06B6D4]/[0.02]'
+                                }`}
+                              >
+                                {isFeatured && (
+                                  <div className="absolute top-0 right-0 w-32 h-32 bg-[#06B6D4]/5 rounded-full blur-2xl pointer-events-none" />
                                 )}
+                                <div>
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                      <h5 className="text-base font-bold font-display text-white uppercase tracking-wider">
+                                        {proj.name}
+                                      </h5>
+                                      {isFeatured && (
+                                        <span className="px-2 py-0.5 text-[8px] font-mono font-bold tracking-widest text-[#06B6D4] bg-[#06B6D4]/15 border border-[#06B6D4]/30 uppercase rounded-full">
+                                          FLAGSHIP BUILD
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-[9px] font-mono font-bold text-gray-500 uppercase px-1.5 py-0.5 border border-white/5 rounded">
+                                      {proj.built}
+                                    </span>
+                                  </div>
+                                  <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
+                                    {proj.description}
+                                  </p>
+                                  {isFeatured && proj.features && (
+                                    <div className="mt-3.5 space-y-1">
+                                      <span className="block text-[9px] font-mono font-bold text-gray-500 uppercase tracking-wider">Key Features:</span>
+                                      <ul className="grid grid-cols-1 sm:grid-cols-2 gap-1 text-[11px] font-sans text-gray-450">
+                                        {proj.features.map((feat, fIdx) => (
+                                          <li key={fIdx} className="flex items-start space-x-1.5">
+                                            <span className="text-[#06B6D4] mt-0.5">•</span>
+                                            <span>{feat}</span>
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  )}
+                                  {proj.status && (
+                                    <div className="mt-3.5 p-2.5 bg-[#020817]/60 border border-white/5 rounded-lg">
+                                      <span className="block text-[8px] font-mono font-bold text-gray-500 uppercase tracking-widest">DEPLOYMENT STATUS</span>
+                                      <p className="text-[11px] font-sans text-[#06B6D4] mt-0.5 leading-relaxed font-medium">
+                                        {proj.status}
+                                      </p>
+                                    </div>
+                                  )}
+                                  <div className="flex flex-wrap gap-1.5 mt-4">
+                                    {proj.tech.map((t, idx) => (
+                                      <span key={idx} className="text-[9px] font-mono bg-white/5 text-gray-400 px-2 py-0.5 rounded">
+                                        {t}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+                                <div className="flex items-center space-x-4 mt-4 pt-3 border-t border-white/5">
+                                  {proj.github && (
+                                    <a 
+                                      href={proj.github} 
+                                      target="_blank" 
+                                      rel="noreferrer"
+                                      className="flex items-center space-x-1.5 text-[10px] font-mono font-bold text-[#06B6D4] hover:text-[#0891B2] tracking-widest uppercase transition-colors"
+                                    >
+                                      <GitHubIcon size={12} />
+                                      <span>Code Repository</span>
+                                    </a>
+                                  )}
+                                </div>
                               </div>
-                            </div>
-                          ))}
+                            );
+                          })}
                         </div>
                       </div>
                     )}

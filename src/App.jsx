@@ -187,9 +187,9 @@ function LandingPage() {
 
   // Calculate Build Log general stats for preview
   const totalDays = 40; // Static copy representing journal timeline length
-  const completedDays = 11;
+  const completedDays = 14;
   const overallProgress = Math.round((completedDays / totalDays) * 100);
-  const totalProjects = 2;
+  const totalProjects = 3;
 
   // Projects dataset mapping
   const projectsList = [
