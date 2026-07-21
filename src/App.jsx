@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import BackgroundParticles from './components/BackgroundParticles';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -1375,6 +1375,21 @@ function LandingPage() {
   );
 }
 
+// Analytics PageView tracker component for SPA route changes
+function AnalyticsTracker() {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (window.gtag) {
+      window.gtag('config', 'G-46CMVVN5ML', {
+        page_path: location.pathname + location.search,
+      });
+    }
+  }, [location]);
+
+  return null;
+}
+
 export default function App() {
   // Lenis smooth scroll initialization
   useEffect(() => {
@@ -1414,6 +1429,7 @@ export default function App() {
 
   return (
     <Router>
+      <AnalyticsTracker />
       <div className="min-h-screen relative overflow-hidden bg-[#020817] text-[#F8FAFC] font-sans selection:bg-[#06B6D4]/30 selection:text-white">
         
         {/* Layered Animated Background (fixed behind everything) */}
