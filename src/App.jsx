@@ -538,22 +538,20 @@ function LandingPage() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Right Column: D-ID AI Agent */}
+          {/* Hero Right Column: 3D Scene */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1.0, delay: 0.3 }}
             className="lg:col-span-5 flex justify-center items-center relative h-[380px] md:h-[480px] w-full"
           >
-            <div className="w-full h-full rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-[#06B6D4]/10">
-              {/* D-ID Agent Frame Embed — Client Key is domain-scoped by D-ID */}
-              <iframe
-                src="https://agent.d-id.com/v2/chat/v2_agt_emAAgEdL?key=ck_tknJBqW5UwM3FYov5FgEq"
-                allow="microphone; camera; autoplay; clipboard-write"
-                style={{ width: '100%', height: '100%', border: 'none', colorScheme: 'dark' }}
-                title="D-ID AI Agent – Talk to Tayyab"
-              />
-            </div>
+            <Suspense fallback={
+              <div className="w-full h-full flex items-center justify-center">
+                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#06B6D4] border-r-2" />
+              </div>
+            }>
+              <Hero3D />
+            </Suspense>
           </motion.div>
 
         </div>
