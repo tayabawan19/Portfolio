@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import BackgroundParticles from './components/BackgroundParticles';
-import AvatarHeroVideo from './components/AvatarHeroVideo';
+import AvatarVideo from './components/AvatarVideo';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
@@ -539,9 +539,9 @@ function LandingPage() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Right Column: Dedicated AI Avatar Intro Video */}
-          <div className="lg:col-span-5 flex justify-center items-center relative w-full">
-            <AvatarHeroVideo />
+          {/* Hero Right Column: AI Avatar Intro Video */}
+          <div className="lg:col-span-5 flex justify-center items-center relative w-full min-h-[320px]">
+            <AvatarVideo />
           </div>
 
         </div>
