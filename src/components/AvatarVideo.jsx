@@ -1,58 +1,57 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Volume2, VolumeX } from 'lucide-react';
+import { Volume2, VolumeX, Play } from 'lucide-react';
 
 export default function AvatarVideo() {
-  const [isMuted, setIsMuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [hasInteracted, setHasInteracted] = useState(false);
   const videoRef = useRef(null);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Start with unmuted audio configuration
+    // Try playing unmuted by default
     video.muted = false;
     video.volume = 1.0;
 
-    const playUnmuted = async () => {
+    const startPlayback = async () => {
       try {
         await video.play();
         setIsMuted(false);
+        setHasInteracted(true);
       } catch (err) {
-        console.warn("Browser blocked initial unmuted autoplay, attempting muted play + user gesture listener:", err);
+        // Autoplay policy prevented unmuted sound -> fallback to muted autoplay
+        console.warn("Browser Autoplay policy requires user tap for sound:", err);
         video.muted = true;
         setIsMuted(true);
-        try {
-          await video.play();
-        } catch (e) {
-          console.warn("Muted play fallback error:", e);
-        }
+        video.play().catch(() => {});
 
-        // Attach one-time global interaction listener to enable sound on first user touch/click/scroll
-        const enableSoundOnInteraction = () => {
+        // Listen for ANY initial user gesture on the page to unmute & restart with sound
+        const handleFirstInteraction = () => {
           if (video && video.muted) {
             video.muted = false;
+            video.currentTime = 0;
             setIsMuted(false);
+            setHasInteracted(true);
             video.play().catch(() => {});
           }
-          cleanupListeners();
+          cleanup();
         };
 
-        const cleanupListeners = () => {
-          window.removeEventListener('pointerdown', enableSoundOnInteraction);
-          window.removeEventListener('touchstart', enableSoundOnInteraction);
-          window.removeEventListener('click', enableSoundOnInteraction);
-          window.removeEventListener('scroll', enableSoundOnInteraction);
+        const cleanup = () => {
+          window.removeEventListener('pointerdown', handleFirstInteraction);
+          window.removeEventListener('touchstart', handleFirstInteraction);
+          window.removeEventListener('click', handleFirstInteraction);
         };
 
-        window.addEventListener('pointerdown', enableSoundOnInteraction, { once: true });
-        window.addEventListener('touchstart', enableSoundOnInteraction, { once: true });
-        window.addEventListener('click', enableSoundOnInteraction, { once: true });
-        window.addEventListener('scroll', enableSoundOnInteraction, { once: true });
+        window.addEventListener('pointerdown', handleFirstInteraction, { once: true });
+        window.addEventListener('touchstart', handleFirstInteraction, { once: true });
+        window.addEventListener('click', handleFirstInteraction, { once: true });
       }
     };
 
-    playUnmuted();
+    startPlayback();
   }, []);
 
   // When 1 full playback finishes: automatically mute and continue looping silently
@@ -73,6 +72,10 @@ export default function AvatarVideo() {
     setIsMuted(nextMuted);
 
     if (!nextMuted) {
+      if (!hasInteracted) {
+        videoRef.current.currentTime = 0;
+        setHasInteracted(true);
+      }
       videoRef.current.play().catch(() => {});
     }
   };
@@ -112,9 +115,28 @@ export default function AvatarVideo() {
             Your browser does not support HTML5 video.
           </video>
 
-          {/* Animated Audio Indicator Badge (top-left) */}
+          {/* Prompt Overlay when muted */}
           <AnimatePresence>
-            {!isMuted ? (
+            {isMuted && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute inset-0 bg-black/40 backdrop-blur-[2px] flex flex-col items-center justify-center pointer-events-none p-4 text-center z-10"
+              >
+                <div className="w-12 h-12 rounded-full bg-[#06B6D4] text-white flex items-center justify-center shadow-lg shadow-[#06B6D4]/40 animate-bounce mb-2">
+                  <Volume2 size={22} className="ml-0.5" />
+                </div>
+                <span className="text-xs sm:text-sm font-mono font-bold text-white bg-[#020817]/90 px-3 py-1.5 rounded-full border border-[#06B6D4]/50 shadow-md">
+                  Tap Anywhere for Sound 🔊
+                </span>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Animated Audio Indicator Badge (top-left when playing sound) */}
+          <AnimatePresence>
+            {!isMuted && (
               <motion.div
                 key="playing"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -125,19 +147,6 @@ export default function AvatarVideo() {
                 <Volume2 size={14} className="text-[#06B6D4] animate-pulse" />
                 <span className="text-[11px] font-mono font-semibold text-white tracking-wide">
                   🔊 Playing with Sound
-                </span>
-              </motion.div>
-            ) : (
-              <motion.div
-                key="tap-unmute"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                className="absolute top-3 left-3 z-20 bg-[#020817]/85 backdrop-blur-md px-3 py-1.5 rounded-md border border-white/10 flex items-center space-x-1.5 pointer-events-none shadow-md animate-pulse"
-              >
-                <VolumeX size={14} className="text-gray-400" />
-                <span className="text-[11px] font-mono font-semibold text-white/90 tracking-wide">
-                  Click/Tap for Sound 🔊
                 </span>
               </motion.div>
             )}
