@@ -619,15 +619,17 @@ function LandingPage() {
         <SectionHeader eyebrow="TECHNICAL EXPERTISE" whiteText="Technical" cyanText="Skills" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mt-6">
-          {/* Skills Left: 3D Globe - hidden on mobile */}
-          <div className="hidden lg:block lg:col-span-6 flex justify-center items-center">
-            <Suspense fallback={
-              <div className="w-full h-[400px] flex items-center justify-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#06B6D4] border-r-2" />
-              </div>
-            }>
-              <SkillsGlobe />
-            </Suspense>
+          {/* Skills Left: D-ID AI Agent — replaces the 3D globe */}
+          <div className="hidden lg:flex lg:col-span-6 justify-center items-center">
+            <div className="w-full h-[400px] rounded-2xl overflow-hidden border border-white/10 shadow-2xl shadow-[#06B6D4]/5">
+              {/* D-ID Agent Frame Embed — Client Key is domain-scoped by D-ID */}
+              <iframe
+                src="https://agent.d-id.com/v2/chat/v2_agt_emAAgEdL?key=ck_tknJBqW5UwM3FYov5FgEq"
+                allow="microphone; camera; autoplay; clipboard-write"
+                style={{ width: '100%', height: '100%', border: 'none', colorScheme: 'dark' }}
+                title="D-ID AI Agent – Talk to Tayyab"
+              />
+            </div>
           </div>
 
           {/* Skills Right: Grouped Category Badges */}
