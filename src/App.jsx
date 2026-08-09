@@ -1455,6 +1455,7 @@ export default function App() {
 
         {/* Floating Chatbot Assistant */}
         <ChatbotWidget />
+
       </div>
     </Router>
   );
