@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import BackgroundParticles from './components/BackgroundParticles';
+import AvatarVideo from './components/AvatarVideo';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
@@ -1456,6 +1457,8 @@ export default function App() {
         {/* Floating Chatbot Assistant */}
         <ChatbotWidget />
 
+        {/* Floating AI Avatar Intro Video */}
+        <AvatarVideo />
       </div>
     </Router>
   );
