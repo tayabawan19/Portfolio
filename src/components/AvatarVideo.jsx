@@ -3,44 +3,56 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Volume2, VolumeX } from 'lucide-react';
 
 export default function AvatarVideo() {
-  // Start muted to ensure 100% smooth mobile autoplay without freezing
-  const [isMuted, setIsMuted] = useState(true);
-  const [hasPlayedUnmuted, setHasPlayedUnmuted] = useState(false);
+  const [isMuted, setIsMuted] = useState(false);
   const videoRef = useRef(null);
 
-  // Guarantee mobile and desktop autoplay by starting muted
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Mobile Safari / Chrome requirement
-    video.muted = true;
-    video.playsInline = true;
+    // Start with unmuted audio configuration
+    video.muted = false;
+    video.volume = 1.0;
 
-    // Trigger autoplay
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch((err) => {
-        console.warn("Autoplay fallback handling:", err);
-      });
-    }
-
-    // Try unmuting automatically if desktop browser allows unmuted audio
-    const attemptUnmute = async () => {
+    const playUnmuted = async () => {
       try {
-        video.muted = false;
         await video.play();
         setIsMuted(false);
-        setHasPlayedUnmuted(true);
-      } catch (e) {
-        // Autoplay policy prevented unmuted audio -> fallback to muted play
+      } catch (err) {
+        console.warn("Browser blocked initial unmuted autoplay, attempting muted play + user gesture listener:", err);
         video.muted = true;
         setIsMuted(true);
-        video.play().catch(() => {});
+        try {
+          await video.play();
+        } catch (e) {
+          console.warn("Muted play fallback error:", e);
+        }
+
+        // Attach one-time global interaction listener to enable sound on first user touch/click/scroll
+        const enableSoundOnInteraction = () => {
+          if (video && video.muted) {
+            video.muted = false;
+            setIsMuted(false);
+            video.play().catch(() => {});
+          }
+          cleanupListeners();
+        };
+
+        const cleanupListeners = () => {
+          window.removeEventListener('pointerdown', enableSoundOnInteraction);
+          window.removeEventListener('touchstart', enableSoundOnInteraction);
+          window.removeEventListener('click', enableSoundOnInteraction);
+          window.removeEventListener('scroll', enableSoundOnInteraction);
+        };
+
+        window.addEventListener('pointerdown', enableSoundOnInteraction, { once: true });
+        window.addEventListener('touchstart', enableSoundOnInteraction, { once: true });
+        window.addEventListener('click', enableSoundOnInteraction, { once: true });
+        window.addEventListener('scroll', enableSoundOnInteraction, { once: true });
       }
     };
 
-    attemptUnmute();
+    playUnmuted();
   }, []);
 
   // When 1 full playback finishes: automatically mute and continue looping silently
@@ -92,7 +104,6 @@ export default function AvatarVideo() {
             ref={videoRef}
             autoPlay
             playsInline
-            muted
             preload="auto"
             onEnded={handleVideoEnded}
             className="w-full h-full object-cover"
@@ -126,7 +137,7 @@ export default function AvatarVideo() {
               >
                 <VolumeX size={14} className="text-gray-400" />
                 <span className="text-[11px] font-mono font-semibold text-white/90 tracking-wide">
-                  Tap for Sound 🔊
+                  Click/Tap for Sound 🔊
                 </span>
               </motion.div>
             )}
