@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import BackgroundParticles from './components/BackgroundParticles';
-import AvatarVideo from './components/AvatarVideo';
+import AvatarHeroVideo from './components/AvatarHeroVideo';
 import { motion, AnimatePresence } from 'framer-motion';
 import Lenis from 'lenis';
 import { gsap } from 'gsap';
@@ -539,21 +539,10 @@ function LandingPage() {
             </motion.div>
           </motion.div>
 
-          {/* Hero Right Column: 3D Scene */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.0, delay: 0.3 }}
-            className="lg:col-span-5 flex justify-center items-center relative h-[380px] md:h-[480px] w-full"
-          >
-            <Suspense fallback={
-              <div className="w-full h-full flex items-center justify-center">
-                <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-[#06B6D4] border-r-2" />
-              </div>
-            }>
-              <Hero3D />
-            </Suspense>
-          </motion.div>
+          {/* Hero Right Column: Dedicated AI Avatar Intro Video */}
+          <div className="lg:col-span-5 flex justify-center items-center relative w-full">
+            <AvatarHeroVideo />
+          </div>
 
         </div>
       </section>
@@ -1456,9 +1445,6 @@ export default function App() {
 
         {/* Floating Chatbot Assistant */}
         <ChatbotWidget />
-
-        {/* Floating AI Avatar Intro Video */}
-        <AvatarVideo />
       </div>
     </Router>
   );
