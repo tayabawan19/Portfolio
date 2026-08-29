@@ -29,8 +29,8 @@ export const phasesData = [
     id: 1,
     title: "Phase 1: Python Foundations",
     month: "July 2026",
-    status: "in-progress",
-    progress: Math.round((14 / 14) * 100), // 100% of Phase 1 completed
+    status: "completed",
+    progress: 100, // 14 of 14 days completed (100%)
     days: [
       { day: 1, topic: "Variables & Data Types", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day1.py" },
       { day: 2, topic: "Lists & Dictionaries", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day2.py" },
@@ -43,9 +43,9 @@ export const phasesData = [
       { day: 9, topic: "Working with JSON", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day9.py" },
       { day: 10, topic: "Mini Project: ChatManager (CLI chatbot, JSON persistence, OOP)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day10.py" },
       { day: 11, topic: "Real AI API Integration (Groq + Llama 3.3 70B)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day11.py" },
-      { day: 12, topic: "Chatbot with Memory (ChatManager + real Groq API, full conversation history resent each call)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day12.py" },
+      { day: 12, topic: "Chatbot with Memory (full conversation history resent each call)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day12.py" },
       { day: 13, topic: "Prompt Engineering (zero-shot, few-shot, chain-of-thought, system/role prompting)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day13.py" },
-      { day: 14, topic: "End-to-End AI App: Personal AI Assistant CLI (capstone project — multi-mode personality system: tutor/casual/code, combining every concept from Days 1-13)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day14.py" }
+      { day: 14, topic: "End-to-End AI App: Personal AI Assistant CLI (capstone — multi-mode personality system: tutor/casual/code)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day14.py" }
     ],
     projects: [
       {
@@ -65,8 +65,8 @@ export const phasesData = [
       {
         name: "Personal AI Assistant — Full-Stack Web App",
         built: "Days 12-14",
-        description: "A real-time AI chat assistant with 3 selectable personality modes (tutor / casual / code), persistent multi-user chat history, and a custom name-entry flow so each visitor gets their own saved conversation. Started as a terminal app, rebuilt as a full-stack product with a FastAPI backend and a React frontend.",
-        tech: ["Python", "FastAPI", "Groq (Llama 3.3 70B)", "MongoDB Atlas", "React (Vite)"],
+        description: "Real-time AI chat assistant with 3 personality modes (tutor/casual/code), per-user persistent chat history, name-entry flow.",
+        tech: ["FastAPI", "Groq (Llama 3.3 70B)", "MongoDB Atlas", "React (Vite)"],
         features: [
           "mode switching mid-conversation",
           "per-user persistent memory via MongoDB",
@@ -74,7 +74,7 @@ export const phasesData = [
           "live typing indicator"
         ],
         github: "https://github.com/tayabawan19/AI-Projects",
-        status: "working locally, deployment to Render (backend) + Vercel (frontend) in progress — do NOT mark as \"live\" yet unless I say so explicitly in a future update",
+        status: "working locally — do NOT mark as \"live\" unless I confirm deployment is complete in a future update",
         featured: true
       }
     ]
@@ -83,15 +83,23 @@ export const phasesData = [
     id: 2,
     title: "Phase 2: Machine Learning",
     month: "August 2026",
-    status: "upcoming",
-    progress: 0,
+    status: "in-progress",
+    progress: Math.round((5 / 14) * 100), // 36% (5 of 14 days completed)
     days: [
-      { day: 15, topic: "TBD", completed: false },
-      { day: 16, topic: "TBD", completed: false },
-      { day: 17, topic: "TBD", completed: false },
-      { day: 18, topic: "TBD", completed: false },
-      { day: 19, topic: "TBD", completed: false },
-      { day: 20, topic: "TBD", completed: false }
+      { day: 15, topic: "NumPy Basics (arrays, shapes, indexing/slicing, vectorized math, reshape)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day15.py" },
+      { day: 16, topic: "Pandas Basics (Series, DataFrames, filtering with multiple conditions, sorting, CSV read/write, groupby-style analysis)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day16.py" },
+      { day: 17, topic: "Data Cleaning (missing values, duplicates, inconsistent text formatting, outlier handling, fixing data types)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day17.py" },
+      { day: 18, topic: "Data Visualization (Matplotlib + Seaborn: line, bar, histogram, scatter, box plot, correlation heatmap)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day18.py" },
+      { day: 19, topic: "Train/Test Split & Features (separating features/label, using scikit-learn's train_test_split, understanding why random splitting prevents a model from \"memorizing\" instead of learning)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day19.py" },
+      { day: 20, topic: "Linear Regression (first real trained ML model)", completed: false },
+      { day: 21, topic: "Classification (Logistic Regression)", completed: false },
+      { day: 22, topic: "Decision Trees & Random Forest", completed: false },
+      { day: 23, topic: "Model Evaluation Metrics", completed: false },
+      { day: 24, topic: "Overfitting & Underfitting", completed: false },
+      { day: 25, topic: "Feature Engineering", completed: false },
+      { day: 26, topic: "Unsupervised Learning Intro (Clustering)", completed: false },
+      { day: 27, topic: "Mini Project: Real ML Model (capstone - part 1)", completed: false },
+      { day: 28, topic: "Mini Project: Real ML Model (capstone - part 2)", completed: false }
     ],
     projects: []
   },
@@ -102,11 +110,11 @@ export const phasesData = [
     status: "upcoming",
     progress: 0,
     days: [
-      { day: 21, topic: "TBD", completed: false },
-      { day: 22, topic: "TBD", completed: false },
-      { day: 23, topic: "TBD", completed: false },
-      { day: 24, topic: "TBD", completed: false },
-      { day: 25, topic: "TBD", completed: false }
+      { day: 29, topic: "TBD", completed: false },
+      { day: 30, topic: "TBD", completed: false },
+      { day: 31, topic: "TBD", completed: false },
+      { day: 32, topic: "TBD", completed: false },
+      { day: 33, topic: "TBD", completed: false }
     ],
     projects: []
   },
@@ -117,11 +125,11 @@ export const phasesData = [
     status: "upcoming",
     progress: 0,
     days: [
-      { day: 26, topic: "TBD", completed: false },
-      { day: 27, topic: "TBD", completed: false },
-      { day: 28, topic: "TBD", completed: false },
-      { day: 29, topic: "TBD", completed: false },
-      { day: 30, topic: "TBD", completed: false }
+      { day: 34, topic: "TBD", completed: false },
+      { day: 35, topic: "TBD", completed: false },
+      { day: 36, topic: "TBD", completed: false },
+      { day: 37, topic: "TBD", completed: false },
+      { day: 38, topic: "TBD", completed: false }
     ],
     projects: []
   },
@@ -132,11 +140,11 @@ export const phasesData = [
     status: "upcoming",
     progress: 0,
     days: [
-      { day: 31, topic: "TBD", completed: false },
-      { day: 32, topic: "TBD", completed: false },
-      { day: 33, topic: "TBD", completed: false },
-      { day: 34, topic: "TBD", completed: false },
-      { day: 35, topic: "TBD", completed: false }
+      { day: 39, topic: "TBD", completed: false },
+      { day: 40, topic: "TBD", completed: false },
+      { day: 41, topic: "TBD", completed: false },
+      { day: 42, topic: "TBD", completed: false },
+      { day: 43, topic: "TBD", completed: false }
     ],
     projects: []
   },
@@ -147,11 +155,11 @@ export const phasesData = [
     status: "upcoming",
     progress: 0,
     days: [
-      { day: 36, topic: "TBD", completed: false },
-      { day: 37, topic: "TBD", completed: false },
-      { day: 38, topic: "TBD", completed: false },
-      { day: 39, topic: "TBD", completed: false },
-      { day: 40, topic: "TBD", completed: false }
+      { day: 44, topic: "TBD", completed: false },
+      { day: 45, topic: "TBD", completed: false },
+      { day: 46, topic: "TBD", completed: false },
+      { day: 47, topic: "TBD", completed: false },
+      { day: 48, topic: "TBD", completed: false }
     ],
     projects: []
   }
@@ -159,7 +167,7 @@ export const phasesData = [
 
 export default function BuildLog() {
   const [view, setView] = useState('dashboard'); // 'dashboard' | 'timeline'
-  const [expandedPhase, setExpandedPhase] = useState({ 1: true, 2: false, 3: false, 4: false, 5: false, 6: false });
+  const [expandedPhase, setExpandedPhase] = useState({ 1: true, 2: true, 3: false, 4: false, 5: false, 6: false });
 
   // Calculate general stats
   const totalDays = phasesData.reduce((acc, phase) => acc + phase.days.length, 0);
@@ -168,6 +176,7 @@ export default function BuildLog() {
   );
   const overallProgress = Math.round((completedDays / totalDays) * 100);
   const totalProjects = phasesData.reduce((acc, phase) => acc + phase.projects.length, 0);
+  const currentPhase = phasesData.find(p => p.status === 'in-progress') || phasesData[0];
 
   const togglePhase = (id) => {
     setExpandedPhase(prev => ({
@@ -275,7 +284,7 @@ export default function BuildLog() {
           </div>
           <div>
             <span className="block text-[10px] font-mono font-semibold text-gray-500 uppercase tracking-wider">Current Focus</span>
-            <span className="text-sm font-bold font-display text-white uppercase tracking-wider truncate max-w-[160px]">Phase 1: Python</span>
+            <span className="text-sm font-bold font-display text-white uppercase tracking-wider truncate max-w-[160px]">{currentPhase.title}</span>
           </div>
         </div>
       </div>
