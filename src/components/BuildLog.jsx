@@ -84,28 +84,28 @@ export const phasesData = [
     title: "Phase 2: Machine Learning",
     month: "August 2026",
     status: "in-progress",
-    progress: Math.round((5 / 14) * 100), // 36% (5 of 14 days completed)
+    progress: 50, // 7 of 14 days completed (50%)
     days: [
       { day: 15, topic: "NumPy Basics (arrays, shapes, indexing/slicing, vectorized math, reshape)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day15.py" },
-      { day: 16, topic: "Pandas Basics (Series, DataFrames, filtering with multiple conditions, sorting, CSV read/write, groupby-style analysis)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day16.py" },
-      { day: 17, topic: "Data Cleaning (missing values, duplicates, inconsistent text formatting, outlier handling, fixing data types)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day17.py" },
+      { day: 16, topic: "Pandas Basics (Series, DataFrames, filtering, sorting, CSV read/write)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day16.py" },
+      { day: 17, topic: "Data Cleaning (missing values, duplicates, inconsistent text, outlier handling, fixing data types)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day17.py" },
       { day: 18, topic: "Data Visualization (Matplotlib + Seaborn: line, bar, histogram, scatter, box plot, correlation heatmap)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day18.py" },
-      { day: 19, topic: "Train/Test Split & Features (separating features/label, using scikit-learn's train_test_split, understanding why random splitting prevents a model from \"memorizing\" instead of learning)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day19.py" },
-      { day: 20, topic: "Linear Regression (first real trained ML model)", completed: false },
-      { day: 21, topic: "Classification (Logistic Regression)", completed: false },
+      { day: 19, topic: "Train/Test Split & Features (features vs labels, scikit-learn's train_test_split, why random splitting prevents memorization)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day19.py" },
+      { day: 20, topic: "Linear Regression (first real trained ML model — predicting a numeric value, Marks, from StudyHours/Age/Attendance; evaluated with R² Score and Mean Absolute Error)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day20.py" },
+      { day: 21, topic: "Classification with Logistic Regression (predicting a category — Pass/Fail — instead of a number; sigmoid probabilities, predict_proba, accuracy scoring)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day21.py" },
       { day: 22, topic: "Decision Trees & Random Forest", completed: false },
       { day: 23, topic: "Model Evaluation Metrics", completed: false },
       { day: 24, topic: "Overfitting & Underfitting", completed: false },
       { day: 25, topic: "Feature Engineering", completed: false },
       { day: 26, topic: "Unsupervised Learning Intro (Clustering)", completed: false },
-      { day: 27, topic: "Mini Project: Real ML Model (capstone - part 1)", completed: false },
-      { day: 28, topic: "Mini Project: Real ML Model (capstone - part 2)", completed: false }
+      { day: 27, topic: "Mini Project: Real ML Model (capstone — Part 1)", completed: false },
+      { day: 28, topic: "Mini Project: Real ML Model (capstone — Part 2)", completed: false }
     ],
     projects: []
   },
   {
     id: 3,
-    title: "Phase 3: Deep Learning & Neural Networks",
+    title: "Phase 3: Deep Learning",
     month: "September 2026",
     status: "upcoming",
     progress: 0,
@@ -120,7 +120,7 @@ export const phasesData = [
   },
   {
     id: 4,
-    title: "Phase 4: LLMs & AI Engineering — RAG, LangChain, Vector DBs",
+    title: "Phase 4: LLMs & AI Engineering",
     month: "October 2026",
     status: "upcoming",
     progress: 0,
