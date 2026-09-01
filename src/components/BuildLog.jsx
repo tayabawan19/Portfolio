@@ -81,10 +81,10 @@ export const phasesData = [
   },
   {
     id: 2,
-    title: "Phase 2: Machine Learning",
+    title: "Phase 2: Machine Learning — Fundamentals",
     month: "August 2026",
     status: "in-progress",
-    progress: 50, // 7 of 14 days completed (50%)
+    progress: 64, // 9 of 14 days completed (64%)
     days: [
       { day: 15, topic: "NumPy Basics (arrays, shapes, indexing/slicing, vectorized math, reshape)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day15.py" },
       { day: 16, topic: "Pandas Basics (Series, DataFrames, filtering, sorting, CSV read/write)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day16.py" },
@@ -93,8 +93,8 @@ export const phasesData = [
       { day: 19, topic: "Train/Test Split & Features (features vs labels, scikit-learn's train_test_split, why random splitting prevents memorization)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day19.py" },
       { day: 20, topic: "Linear Regression (first real trained ML model — predicting a numeric value, Marks, from StudyHours/Age/Attendance; evaluated with R² Score and Mean Absolute Error)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day20.py" },
       { day: 21, topic: "Classification with Logistic Regression (predicting a category — Pass/Fail — instead of a number; sigmoid probabilities, predict_proba, accuracy scoring)", completed: true, link: "https://github.com/tayabawan19/AI-Engineering-Journey/blob/main/day21.py" },
-      { day: 22, topic: "Decision Trees & Random Forest", completed: false },
-      { day: 23, topic: "Model Evaluation Metrics", completed: false },
+      { day: 22, topic: "Decision Trees & Random Forest", completed: true },
+      { day: 23, topic: "Model Evaluation Metrics (confusion matrix, precision, recall, F1)", completed: true },
       { day: 24, topic: "Overfitting & Underfitting", completed: false },
       { day: 25, topic: "Feature Engineering", completed: false },
       { day: 26, topic: "Unsupervised Learning Intro (Clustering)", completed: false },
@@ -105,69 +105,59 @@ export const phasesData = [
   },
   {
     id: 3,
-    title: "Phase 3: Deep Learning",
+    title: "Phase 3: Machine Learning — Deep Dive",
     month: "September 2026",
     status: "upcoming",
     progress: 0,
     days: [
-      { day: 29, topic: "TBD", completed: false },
-      { day: 30, topic: "TBD", completed: false },
-      { day: 31, topic: "TBD", completed: false },
-      { day: 32, topic: "TBD", completed: false },
-      { day: 33, topic: "TBD", completed: false }
+      { label: "Week 1", topic: "Support Vector Machines (SVM) & K-Nearest Neighbors (KNN)", completed: false },
+      { label: "Week 2", topic: "Hyperparameter Tuning (GridSearch, cross-validation)", completed: false },
+      { label: "Week 3", topic: "Ensemble Methods Deep Dive (Boosting — XGBoost, Gradient Boosting)", completed: false },
+      { label: "Week 4", topic: "Full Capstone ML Project (real dataset, end-to-end, deployed)", completed: false }
     ],
     projects: []
   },
   {
     id: 4,
-    title: "Phase 4: LLMs & AI Engineering",
+    title: "Phase 4: Deep Learning & Neural Networks",
     month: "October 2026",
     status: "upcoming",
     progress: 0,
-    days: [
-      { day: 34, topic: "TBD", completed: false },
-      { day: 35, topic: "TBD", completed: false },
-      { day: 36, topic: "TBD", completed: false },
-      { day: 37, topic: "TBD", completed: false },
-      { day: 38, topic: "TBD", completed: false }
-    ],
+    days: [],
     projects: []
   },
   {
     id: 5,
-    title: "Phase 5: MLOps & Deployment",
+    title: "Phase 5: LLMs & AI Engineering (RAG, LangChain)",
     month: "November 2026",
     status: "upcoming",
     progress: 0,
-    days: [
-      { day: 39, topic: "TBD", completed: false },
-      { day: 40, topic: "TBD", completed: false },
-      { day: 41, topic: "TBD", completed: false },
-      { day: 42, topic: "TBD", completed: false },
-      { day: 43, topic: "TBD", completed: false }
-    ],
+    days: [],
     projects: []
   },
   {
     id: 6,
-    title: "Phase 6: Portfolio Projects",
+    title: "Phase 6: MLOps & Deployment",
     month: "December 2026",
     status: "upcoming",
     progress: 0,
-    days: [
-      { day: 44, topic: "TBD", completed: false },
-      { day: 45, topic: "TBD", completed: false },
-      { day: 46, topic: "TBD", completed: false },
-      { day: 47, topic: "TBD", completed: false },
-      { day: 48, topic: "TBD", completed: false }
-    ],
+    days: [],
+    projects: []
+  },
+  {
+    id: 7,
+    title: "Phase 7: Portfolio Projects (Capstone)",
+    month: "January 2027",
+    status: "upcoming",
+    progress: 0,
+    days: [],
     projects: []
   }
 ];
 
 export default function BuildLog() {
   const [view, setView] = useState('dashboard'); // 'dashboard' | 'timeline'
-  const [expandedPhase, setExpandedPhase] = useState({ 1: true, 2: true, 3: false, 4: false, 5: false, 6: false });
+  const [expandedPhase, setExpandedPhase] = useState({ 1: true, 2: true, 3: false, 4: false, 5: false, 6: false, 7: false });
 
   // Calculate general stats
   const totalDays = phasesData.reduce((acc, phase) => acc + phase.days.length, 0);
@@ -278,13 +268,15 @@ export default function BuildLog() {
         </div>
 
         {/* Current Phase Card */}
-        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#020817]/40 flex items-center space-x-4">
-          <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl">
+        <div className="glass-card p-6 rounded-2xl border border-white/5 bg-[#020817]/40 flex items-center space-x-4 min-w-0">
+          <div className="p-3 bg-blue-500/10 text-blue-400 rounded-xl shrink-0">
             <Layers size={20} />
           </div>
-          <div>
+          <div className="min-w-0 flex-1">
             <span className="block text-[10px] font-mono font-semibold text-gray-500 uppercase tracking-wider">Current Focus</span>
-            <span className="text-sm font-bold font-display text-white uppercase tracking-wider truncate max-w-[160px]">{currentPhase.title}</span>
+            <span className="text-xs sm:text-sm font-bold font-display text-white uppercase tracking-wider block leading-tight mt-0.5">
+              {currentPhase.title}
+            </span>
           </div>
         </div>
       </div>
@@ -449,7 +441,7 @@ export default function BuildLog() {
                         <p className="text-xs text-gray-600 font-mono italic">No topics scheduled yet.</p>
                       ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {phase.days.map((dayObj) => {
+                          {phase.days.map((dayObj, dIdx) => {
                             const DayElement = dayObj.completed && dayObj.link ? 'a' : 'div';
                             const extraProps = dayObj.completed && dayObj.link ? {
                               href: dayObj.link,
@@ -459,7 +451,7 @@ export default function BuildLog() {
 
                             return (
                               <DayElement 
-                                key={dayObj.day} 
+                                key={dayObj.day || dayObj.label || dIdx} 
                                 {...extraProps}
                                 className={`p-3 border rounded-lg flex items-center space-x-3 transition-colors ${
                                   dayObj.completed 
@@ -478,7 +470,7 @@ export default function BuildLog() {
                                   <span className={`block text-[9px] font-mono uppercase tracking-wider ${
                                     dayObj.completed ? 'text-[#06B6D4]' : 'text-gray-600'
                                   }`}>
-                                    Day {dayObj.day}
+                                    {dayObj.label || `Day ${dayObj.day}`}
                                   </span>
                                   <p className="text-xs font-medium truncate mt-0.5">
                                     {dayObj.topic}
@@ -527,7 +519,7 @@ export default function BuildLog() {
 
                 return (
                   <motion.div
-                    key={dayObj.day}
+                    key={dayObj.day || dayObj.label || index}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-80px" }}
@@ -549,7 +541,7 @@ export default function BuildLog() {
 
                     {/* Left or Right Content Card */}
                     <div className={`w-full md:w-[46%] pl-12 md:pl-0 ${
-                      dayObj.day % 2 === 1 ? 'md:text-right md:pr-6 text-left' : 'md:order-last md:pl-6 text-left'
+                      index % 2 === 0 ? 'md:text-right md:pr-6 text-left' : 'md:order-last md:pl-6 text-left'
                     }`}>
                       <DayCard 
                         {...cardProps}
@@ -560,14 +552,14 @@ export default function BuildLog() {
                         }`}
                       >
                         <div className={`flex items-center gap-2 mb-1.5 ${
-                          dayObj.day % 2 === 1 ? 'md:justify-end justify-start' : 'justify-start'
+                          index % 2 === 0 ? 'md:justify-end justify-start' : 'justify-start'
                         }`}>
                           <span className={`px-2 py-0.5 text-[8px] font-mono font-bold tracking-wider rounded uppercase ${
                             dayObj.completed 
                               ? 'bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20' 
                               : 'bg-gray-900/60 text-gray-500 border border-white/5'
                           }`}>
-                            DAY {dayObj.day}
+                            {dayObj.label ? dayObj.label.toUpperCase() : `DAY ${dayObj.day}`}
                           </span>
                           <span className="text-[10px] font-mono text-gray-500">
                             Phase {dayObj.phaseId}
@@ -575,7 +567,7 @@ export default function BuildLog() {
                         </div>
                         
                         <h3 className={`text-sm font-bold font-display text-white tracking-wide uppercase flex items-center gap-1.5 ${
-                          dayObj.day % 2 === 1 ? 'md:justify-end justify-start' : 'justify-start'
+                          index % 2 === 0 ? 'md:justify-end justify-start' : 'justify-start'
                         }`}>
                           <span>{dayObj.topic}</span>
                           {isClickable && <ExternalLink size={10} className="text-[#06B6D4]" />}
