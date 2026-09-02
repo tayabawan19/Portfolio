@@ -28,7 +28,8 @@ import {
   X,
   Layers,
   ChevronRight,
-  Play
+  Play,
+  ExternalLink
 } from 'lucide-react';
 
 // Register GSAP ScrollTrigger
@@ -1103,7 +1104,9 @@ function LandingPage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {academicProjects.map((project, idx) => (
+              {academicProjects.map((project, idx) => {
+                const IconComp = project.icon || Code2;
+                return (
                 <div
                   key={idx}
                   className="p-6 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/30 transition-all flex flex-col justify-between space-y-4"
@@ -1111,7 +1114,7 @@ function LandingPage() {
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="w-9 h-9 rounded-lg bg-[#06B6D4]/10 border border-[#06B6D4]/20 flex items-center justify-center text-[#06B6D4]">
-                        {project.icon ? <project.icon size={18} /> : <Code2 size={18} />}
+                        <IconComp size={18} />
                       </div>
                       <span className="text-[10px] font-mono text-white/40">#{idx + 5}</span>
                     </div>
@@ -1162,7 +1165,8 @@ function LandingPage() {
                     )}
                   </div>
                 </div>
-              ))}
+              );
+            })}
             </div>
           </motion.div>
         )}
