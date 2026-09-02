@@ -6,52 +6,86 @@ export default function AvatarVideo() {
   const [isMuted, setIsMuted] = useState(true);
   const [hasInteracted, setHasInteracted] = useState(false);
   const videoRef = useRef(null);
+  const containerRef = useRef(null);
+  const isVisibleRef = useRef(false);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    const container = containerRef.current;
+    if (!video || !container) return;
 
-    // Try playing unmuted by default
-    video.muted = false;
-    video.volume = 1.0;
+    // Start video muted initially to comply with browser autoplay requirements
+    video.muted = true;
+    video.play().catch(() => {});
 
-    const startPlayback = async () => {
+    const tryUnmute = async () => {
       try {
+        video.muted = false;
+        video.volume = 1.0;
         await video.play();
         setIsMuted(false);
         setHasInteracted(true);
       } catch (err) {
-        // Autoplay policy prevented unmuted sound -> fallback to muted autoplay
-        console.warn("Browser Autoplay policy requires user tap for sound:", err);
+        // If autoplay policy requires a user tap, keep muted until tapped or scrolled
         video.muted = true;
         setIsMuted(true);
-        video.play().catch(() => {});
-
-        // Listen for ANY initial user gesture on the page to unmute & restart with sound
-        const handleFirstInteraction = () => {
-          if (video && video.muted) {
-            video.muted = false;
-            video.currentTime = 0;
-            setIsMuted(false);
-            setHasInteracted(true);
-            video.play().catch(() => {});
-          }
-          cleanup();
-        };
-
-        const cleanup = () => {
-          window.removeEventListener('pointerdown', handleFirstInteraction);
-          window.removeEventListener('touchstart', handleFirstInteraction);
-          window.removeEventListener('click', handleFirstInteraction);
-        };
-
-        window.addEventListener('pointerdown', handleFirstInteraction, { once: true });
-        window.addEventListener('touchstart', handleFirstInteraction, { once: true });
-        window.addEventListener('click', handleFirstInteraction, { once: true });
       }
     };
 
-    startPlayback();
+    const muteVideo = () => {
+      video.muted = true;
+      setIsMuted(true);
+    };
+
+    // Unmute when scrolled into view, mute when scrolled away
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            isVisibleRef.current = true;
+            tryUnmute();
+          } else {
+            isVisibleRef.current = false;
+            muteVideo();
+          }
+        });
+      },
+      {
+        threshold: 0.35
+      }
+    );
+
+    observer.observe(container);
+
+    // Global listener: unmute on user interaction if the video is currently in view
+    const handleUserGesture = () => {
+      if (isVisibleRef.current && video.muted) {
+        tryUnmute();
+      }
+    };
+
+    window.addEventListener('pointerdown', handleUserGesture);
+    window.addEventListener('click', handleUserGesture);
+    window.addEventListener('keydown', handleUserGesture);
+
+    // Handle tab visibility (mute when switching tabs, unmute if visible upon returning)
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        muteVideo();
+      } else if (isVisibleRef.current) {
+        tryUnmute();
+      }
+    };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      observer.disconnect();
+      window.removeEventListener('pointerdown', handleUserGesture);
+      window.removeEventListener('click', handleUserGesture);
+      window.removeEventListener('keydown', handleUserGesture);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+      muteVideo();
+    };
   }, []);
 
   // When 1 full playback finishes: automatically mute and continue looping silently
@@ -87,10 +121,11 @@ export default function AvatarVideo() {
 
   return (
     <motion.div
+      ref={containerRef}
       initial={{ y: 50, opacity: 0, scale: 0.95 }}
       animate={{ y: 0, opacity: 1, scale: 1 }}
       transition={{
-        delay: 1.2,
+        delay: 0.4,
         type: "spring",
         stiffness: 200,
         damping: 20
