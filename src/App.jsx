@@ -1344,13 +1344,13 @@ function LandingPage() {
               </div>
             </div>
 
-            {/* Repo 4: CropSense */}
+            {/* Repo 4: AI Engineering Journey */}
             <div className="p-5 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/40 transition-all space-y-3">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Code2 size={16} className="text-[#06B6D4]" />
-                  <a href="https://github.com/tayabawan19" target="_blank" rel="noopener noreferrer" className="font-mono text-sm font-bold text-white hover:text-[#06B6D4] transition-colors">
-                    CropSense
+                  <a href="https://github.com/tayabawan19/AI-Engineering-Journey" target="_blank" rel="noopener noreferrer" className="font-mono text-sm font-bold text-white hover:text-[#06B6D4] transition-colors">
+                    AI-Engineering-Journey
                   </a>
                 </div>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20">
@@ -1358,10 +1358,10 @@ function LandingPage() {
                 </span>
               </div>
               <p className="text-xs text-white/60 font-sans line-clamp-2">
-                Agricultural intelligence platform with 10 collections, 45 custom compound indexes, and aggregation pipelines.
+                Daily roadmap and code implementations transitioning into AI Engineering: Python, NumPy, Pandas, Scikit-learn, and LLM APIs.
               </p>
               <div className="flex items-center gap-3 text-[11px] font-mono text-white/40 pt-1">
-                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500"></span>MongoDB / Express</span>
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-amber-400"></span>Python / Applied AI</span>
               </div>
             </div>
           </div>
