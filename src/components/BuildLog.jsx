@@ -184,7 +184,7 @@ export default function BuildLog() {
   };
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-6 md:px-12 py-12 relative z-10">
+    <div className="w-full max-w-7xl mx-auto px-6 md:px-12 pt-32 md:pt-40 pb-16 relative z-10">
       
       {/* Back button and title */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
