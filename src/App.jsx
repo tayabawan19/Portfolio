@@ -550,7 +550,7 @@ function LandingPage() {
               variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
               className="text-sm sm:text-base text-white/65 leading-relaxed font-sans max-w-xl text-left"
             >
-              Software Engineering student at COMSATS University Islamabad building practical, production-style software across full-stack web platforms, mobile apps, and applied AI systems. Currently in my 4th semester with a 3.1 CGPA.
+              Software Engineering student at COMSATS University Islamabad building practical, production-style software across full-stack web platforms, mobile apps, and applied AI systems. Currently in my 5th semester with a 3.1 CGPA.
             </motion.p>
 
             {/* Social Icons */}
@@ -654,7 +654,7 @@ function LandingPage() {
                       Muhammad Tayyab Tanveer
                     </p>
                     <p className="text-[10px] font-mono text-[#06B6D4] uppercase tracking-wider">
-                      COMSATS SE • 4th Semester (3.1 CGPA)
+                      COMSATS SE • 5th Semester (3.1 CGPA)
                     </p>
                   </div>
                 </div>
@@ -691,7 +691,7 @@ function LandingPage() {
                 Building serious systems through practical engineering
               </h3>
               <p className="text-sm md:text-base text-white/70 font-sans leading-relaxed">
-                I am a Software Engineering student in my 4th semester at <span className="text-white font-medium">COMSATS University Islamabad</span> (CGPA 3.1). My approach to software is grounded in strong computer science fundamentals and learning by building real, practical applications that solve actual problems.
+                I am a Software Engineering student in my 5th semester at <span className="text-white font-medium">COMSATS University Islamabad</span> (CGPA 3.1). My approach to software is grounded in strong computer science fundamentals and learning by building real, practical applications that solve actual problems.
               </p>
               <p className="text-sm md:text-base text-white/70 font-sans leading-relaxed">
                 Over the past two years, I have built full-stack web platforms with <span className="text-[#06B6D4] font-medium">Next.js</span> and <span className="text-[#06B6D4] font-medium">Supabase</span>, mobile applications with <span className="text-[#06B6D4] font-medium">React Native</span> and <span className="text-[#06B6D4] font-medium">Expo</span>, and structured backend systems with <span className="text-[#06B6D4] font-medium">Node.js</span> and <span className="text-[#06B6D4] font-medium">MongoDB</span>. Through hands-on internships and independent work, I am actively expanding into machine learning and LLM integrations.
@@ -731,7 +731,7 @@ function LandingPage() {
             {/* SEMESTER */}
             <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1 transition-transform">
               <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">
-                <StatCounter value="4" suffix="th" />
+                <StatCounter value="5" suffix="th" />
               </h4>
               <span className="text-[10px] font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">SEMESTER</span>
             </div>
@@ -764,7 +764,7 @@ function LandingPage() {
                 <span className="w-2 h-2 rounded-full bg-[#06B6D4] mt-2 shrink-0 shadow-[0_0_8px_#06B6D4]" />
                 <div>
                   <h4 className="text-xs font-bold font-mono text-white uppercase">Software Engineering @ COMSATS</h4>
-                  <p className="text-xs text-white/50 mt-0.5">4th semester student focused on software architecture, clean APIs, and distributed data systems.</p>
+                  <p className="text-xs text-white/50 mt-0.5">5th semester student focused on software architecture, clean APIs, and distributed data systems.</p>
                 </div>
               </div>
 
@@ -1021,7 +1021,7 @@ function LandingPage() {
                     COMSATS University Islamabad
                   </h4>
                   <p className="text-xs text-[#06B6D4] font-mono tracking-wider uppercase mt-1">
-                    4th Semester • CGPA: 3.1
+                    5th Semester • CGPA: 3.1
                   </p>
                   <p className="text-xs md:text-sm text-white/60 font-sans leading-relaxed mt-4">
                     Rigorous computer science & engineering foundations covering Data Structures & Algorithms, Object-Oriented Programming, Database Systems, and IEEE-standard Software Requirements Engineering.

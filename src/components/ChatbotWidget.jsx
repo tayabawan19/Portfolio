@@ -17,7 +17,7 @@ const KNOWLEDGE_BASE = [
   {
     category: "identity",
     keywords: ["who are you", "who is tayyab", "about", "bio", "education", "comsats", "cgpa", "gpa", "degree", "university", "tayyab", "studies", "study"],
-    answer: "Muhammad Tayyab Tanveer is a BS Software Engineering student in his 4th semester at COMSATS University Islamabad, maintaining a CGPA of 3.1. He focuses on building robust systems, backend architecture, and design modeling."
+    answer: "Muhammad Tayyab Tanveer is a BS Software Engineering student in his 5th semester at COMSATS University Islamabad, maintaining a CGPA of 3.1. He focuses on building robust systems, backend architecture, and design modeling."
   },
   {
     category: "internship",
@@ -167,11 +167,11 @@ export default function ChatbotWidget() {
         const model = genAI.getGenerativeModel({
           model: "gemini-2.0-flash",
           systemInstruction: `
-            You are the personal AI assistant for Muhammad Tayyab Tanveer, a BS Software Engineering student at COMSATS University Islamabad (4th semester, CGPA 3.1).
+            You are the personal AI assistant for Muhammad Tayyab Tanveer, a BS Software Engineering student at COMSATS University Islamabad (5th semester, CGPA 3.1).
             Answer questions politely, briefly, and professionally using Tayyab's credentials.
             
             Tayyab's Credentials:
-            - Education: 4th semester BS Software Engineering at COMSATS University Islamabad. CGPA: 3.1.
+            - Education: 5th semester BS Software Engineering at COMSATS University Islamabad. CGPA: 3.1.
             - Skills: Java, C++, Python, Oracle SQL, MongoDB, VS Code, Figma, Canva, WordPress, OOP, Data Structures, SDLC, SRS/SDS Documentation.
             - Internship: 4-week remote AI-Powered Data Analysis internship with Excelerate, supported by Rochester Institute of Technology's Tiger STRIPES Program (completed April 9, 2026, earning a Certificate of Achievement).
             - Languages: English, Urdu, Punjabi (fluent in all).
