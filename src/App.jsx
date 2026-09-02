@@ -27,7 +27,8 @@ import {
   Award,
   X,
   Layers,
-  ChevronRight
+  ChevronRight,
+  Play
 } from 'lucide-react';
 
 // Register GSAP ScrollTrigger
@@ -88,14 +89,14 @@ function SectionHeader({ eyebrow, whiteText, cyanText }) {
       >
         {whiteText.split("").map((char, index) => (
           <motion.span key={index} variants={child} className="inline-block">
-            {char === " " ? "\u00A5" : char}
+            {char === " " ? "\u00A0" : char}
           </motion.span>
         ))}
         {" "}
         <span className="text-[#06B6D4]">
           {cyanText.split("").map((char, index) => (
             <motion.span key={index} variants={child} className="inline-block">
-              {char === " " ? "\u00A5" : char}
+              {char === " " ? "\u00A0" : char}
             </motion.span>
           ))}
         </span>
@@ -123,50 +124,58 @@ function RevealSection({ children, id, className = "" }) {
   );
 }
 
-
-// Animated stats counter
+// Animated stats counter that never flashes 0 and respects reduced-motion
 function StatCounter({ value, suffix = "" }) {
-  const [count, setCount] = useState(0);
-  const ref = useRef(null);
   const isNumeric = !isNaN(parseFloat(value));
+  // Default to the actual value so it renders immediately and never stays stuck on 0
+  const [count, setCount] = useState(() => value);
+  const ref = useRef(null);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    let observer;
-    if (ref.current) {
-      observer = new IntersectionObserver((entries) => {
-        if (entries[0].isIntersecting) {
-          if (isNumeric) {
-            const target = parseFloat(value);
-            const duration = 2000; // 2 seconds
-            const start = performance.now();
-            
-            const animate = (time) => {
-              const progress = Math.min((time - start) / duration, 1);
-              const easedProgress = progress * (2 - progress); // Ease out quadratic
-              
-              let current = easedProgress * target;
-              if (value.toString().includes('.')) {
-                setCount(current.toFixed(1));
-              } else {
-                setCount(Math.floor(current));
-              }
+    const prefersReducedMotion = typeof window !== 'undefined' && 
+      window.matchMedia && 
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-              if (progress < 1) {
-                requestAnimationFrame(animate);
-              } else {
-                setCount(value);
-              }
-            };
+    if (prefersReducedMotion || !isNumeric) {
+      setCount(value);
+      return;
+    }
+
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !hasAnimated.current) {
+        hasAnimated.current = true;
+        const target = parseFloat(value);
+        const duration = 1400;
+        const start = performance.now();
+        
+        const animate = (time) => {
+          const progress = Math.min((time - start) / duration, 1);
+          const easedProgress = progress * (2 - progress); // Quadratic ease-out
+          
+          const current = easedProgress * target;
+          if (value.toString().includes('.')) {
+            setCount(current.toFixed(1));
+          } else {
+            setCount(Math.floor(current));
+          }
+
+          if (progress < 1) {
             requestAnimationFrame(animate);
           } else {
             setCount(value);
           }
-          observer.disconnect();
-        }
-      }, { threshold: 0.1 });
-      observer.observe(ref.current);
-    }
-    return () => observer && observer.disconnect();
+        };
+        requestAnimationFrame(animate);
+        observer.disconnect();
+      }
+    }, { threshold: 0.15 });
+
+    observer.observe(element);
+    return () => observer.disconnect();
   }, [value, isNumeric]);
 
   return <span ref={ref}>{count}{suffix}</span>;
@@ -179,12 +188,17 @@ import zenpayHome from './assets/zenpay/home.jpg';
 import zenpayCard from './assets/zenpay/card.jpg';
 import zenpayProfile from './assets/zenpay/profile.jpg';
 import prooffolioDemo from './assets/prooffolio/demo.mp4';
+import profilePhoto from './assets/tayyab.jpeg';
 import ContactForm from './components/ContactForm';
 import ChatbotWidget from './components/ChatbotWidget';
+import CaseStudyModal from './components/CaseStudyModal';
 
 function LandingPage() {
   const [activeCert, setActiveCert] = useState(null); // 'excelerate' | 'arch' | null
   const [imgErrors, setImgErrors] = useState({ excelerate: false, arch: false });
+  const [selectedCaseStudy, setSelectedCaseStudy] = useState(null);
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [projectTab, setProjectTab] = useState('featured'); // 'featured' | 'all'
 
   // Calculate Build Log general stats for preview
   const totalDays = 40; // Static copy representing journal timeline length
@@ -192,189 +206,241 @@ function LandingPage() {
   const overallProgress = Math.round((completedDays / totalDays) * 100);
   const totalProjects = 3;
 
-  // Projects dataset mapping
-  const projectsList = [
+  // Featured Engineering Projects dataset
+  const featuredProjects = [
     {
+      id: "prooffolio",
       title: "ProofFolio — AI-Powered Student Project Marketplace",
-      description: "A two-sided marketplace where students showcase real, working software and companies discover them to hire, license, or acquire — with Google Gemini AI auto-evaluating every submission and generating a maturity score, technical breakdown, and startup-style pitch.",
-      tags: ["Next.js", "Supabase", "PostgreSQL", "Gemini AI", "Framer Motion", "GSAP", "Node.js", "Brevo API", "Vercel"],
+      description: "A two-sided marketplace where students showcase real, working software and companies discover them to hire, license, or acquire — with Google Gemini AI auto-evaluating submissions to generate a maturity score, technical breakdown, and startup-style pitch.",
+      tags: ["Next.js", "Supabase", "PostgreSQL", "Gemini AI", "Framer Motion", "GSAP", "Brevo API", "Row Level Security"],
       liveLink: "https://prooffolio-five.vercel.app/",
+      githubLink: "https://github.com/tayabawan19",
       icon: Briefcase,
       gradientText: "Sole Developer & Product Owner",
-      bgGradient: "from-[#06B6D4]/15 via-[#020817] to-[#020817]",
       accentColor: "#06B6D4",
       isFlagship: true,
       video: prooffolioDemo,
+      category: "Flagship AI Platform",
+      problem: "Student developers build high-quality software, but their work gets buried in GitHub without objective technical validation, and companies struggle to discover verified talent or license academic prototypes.",
+      solution: "A two-sided marketplace where students showcase working software and companies discover, evaluate, or license them, with Google Gemini AI automatically evaluating submissions to generate technical breakdowns, maturity scores, and startup pitches.",
+      architecture: [
+        { layer: "Frontend / Client", tech: "Next.js 14 App Router", detail: "Server components, responsive UI with Framer Motion & GSAP animations" },
+        { layer: "Database & Security", tech: "Supabase PostgreSQL", detail: "Row Level Security (RLS) policies isolating user data at database level" },
+        { layer: "AI Evaluation Engine", tech: "Google Gemini 2.5 Flash", detail: "Structured JSON prompts evaluating code complexity, maturity scores & pitches" },
+        { layer: "Comms & Auth", tech: "Brevo API & WebSockets", detail: "Direct HTTPS OTP email verification + real-time presence and chat" }
+      ],
+      challenges: [
+        { challenge: "Unreliable SMTP delivery chains in production", solution: "Re-architected the OTP verification system to direct HTTPS API calls to Brevo, bypassing SMTP entirely." },
+        { challenge: "Client-side polling causing server strain and latency in chat", solution: "Migrated messaging to Supabase Realtime WebSocket channels with ephemeral typing indicators and presence." }
+      ],
       achievements: [
-        "Built a two-sided marketplace: student project submission & management, company-side discovery with search/filter by category, tech stack, and AI maturity score",
-        "Integrated Google Gemini API (gemini-2.5-flash) as the AI evaluation engine — structured JSON prompting generates summary, technical breakdown, maturity score, complexity rating, and startup pitch per project",
-        "Built production-grade custom OTP email verification (6-digit, 5-min expiry) via direct Brevo API — bypassing SMTP entirely for reliability",
-        "Implemented real-time messaging with Supabase Realtime WebSockets — live delivery, ephemeral typing indicators, read receipts, and presence",
-        "Enforced Row Level Security (RLS) across all PostgreSQL tables — per-user data access at the database level via auth.uid() Postgres policies",
-        "Built GitHub integration for live repo stat fetching (stars, last updated) via GitHub public API",
-        "Designed referral system — successful referrals unlock Featured placement for the referrer's next project",
-        "Built AI-powered agreement generation — Gemini drafts a licensing/hiring agreement on deal closure, exportable as PDF",
-        "Debugged and resolved full SMTP delivery chain failure — re-architected to direct Brevo API calls",
-        "Migrated messaging from polling to WebSocket-based real-time chat mid-development"
+        "Built a two-sided marketplace: student submission & management, company-side discovery with category, stack, and maturity score filters",
+        "Integrated Google Gemini API (gemini-2.5-flash) generating structured technical breakdown, complexity ratings, and startup pitches",
+        "Engineered custom OTP email verification (6-digit, 5-min expiry) via direct Brevo API",
+        "Implemented real-time messaging with Supabase Realtime WebSockets, typing indicators, and presence",
+        "Enforced Row Level Security (RLS) across all PostgreSQL tables via auth.uid() Postgres policies",
+        "Built live GitHub integration fetching repository stars and last-updated activity",
+        "Designed referral system unlocking featured placement on successful project referrals",
+        "Built AI-powered agreement generation drafting licensing and hiring agreements on deal closure"
       ]
     },
     {
-      title: "ZenPay — Premium Fintech Mobile App",
-      description: "ZenPay is a production-grade, full-stack fintech mobile application built with React Native & Expo, designed to simulate a modern digital wallet and payment platform inspired by apps like Revolut, JazzCash, and Cashly.",
-      tags: ["React Native", "Expo", "Expo Router", "Zustand", "Node.js", "Express", "Firebase Auth", "Cloud Firestore", "Stripe API", "Victory Native", "Render", "EAS Build"],
+      id: "zenpay",
+      title: "ZenPay — Fintech Mobile App",
+      description: "ZenPay is a production-style, full-stack fintech mobile application built with React Native & Expo, designed to simulate a modern digital wallet with atomic balance transfers, interactive virtual cards, and category-based spending analytics.",
+      tags: ["React Native", "Expo", "Expo Router", "Zustand", "Node.js", "Express", "Firebase Auth", "Cloud Firestore", "Stripe API"],
       githubLink: "https://github.com/tayabawan19/ZenPay",
       liveLink: "https://github.com/tayabawan19/ZenPay/releases",
       icon: Briefcase,
-      gradientText: "MOBILE FINTECH",
-      bgGradient: "from-[#06B6D4]/15 via-[#020817] to-[#020817]",
+      gradientText: "Mobile Fintech Application",
+      accentColor: "#06B6D4",
+      category: "Mobile Fintech",
+      problem: "Digital payment platforms require rock-solid balance integrity, immediate transaction feedback without polling, and intuitive mobile budgeting tools that work smoothly on both Android and iOS.",
+      solution: "A production-style mobile wallet simulating instant peer-to-peer payments, biometric security, virtual cards with 3D flip effects, and category-based spending analytics.",
+      architecture: [
+        { layer: "Mobile App", tech: "React Native & Expo", detail: "Expo Router, Zustand global state, and custom gesture-driven interactions" },
+        { layer: "Backend API", tech: "Node.js & Express", detail: "Modular REST endpoints handling transaction validation and user profiles" },
+        { layer: "Database", tech: "Cloud Firestore", detail: "Atomic batch transactions guaranteeing consistent balances during P2P transfers" },
+        { layer: "Auth & Payments", tech: "Firebase Auth & Stripe", detail: "Biometric login, email OTP verification, and Stripe payment integration" }
+      ],
+      challenges: [
+        { challenge: "Race conditions in concurrent balance updates during P2P transfers", solution: "Implemented Firestore atomic transactions ensuring debits and credits succeed together or roll back cleanly." },
+        { challenge: "Excessive battery usage caused by interval-based polling for balance changes", solution: "Replaced polling with real-time event-driven Firestore snapshot listeners." }
+      ],
       achievements: [
-        "Real-time P2P transfers with atomic transactions",
-        "Live balance sync (event-driven, no polling)",
-        "Firebase Auth + custom OTP email verification",
-        "Stripe payment integration (test mode)",
-        "Virtual card with 3D flip + freeze/unfreeze",
-        "Spending analytics with category breakdown charts",
-        "Biometric login + push notifications"
+        "Engineered real-time P2P transfers with Firestore atomic transactions",
+        "Live balance sync driven by real-time event listeners (zero polling)",
+        "Firebase Auth paired with custom email OTP verification",
+        "Stripe payment integration (test mode) for wallet funding",
+        "Interactive virtual card with 3D flip animations and freeze/unfreeze security toggles",
+        "Spending analytics dashboard with category breakdown charts powered by Victory Native",
+        "Biometric authentication (FaceID/Fingerprint) and push notification engine"
       ],
       screenshots: [
         { src: zenpayHome, caption: "Home Dashboard" },
-        { src: zenpayCard, caption: "Virtual Card screen" },
-        { src: zenpayProfile, caption: "Profile screen" },
-        { src: zenpayLogin, caption: "Login/Welcome screen" },
-        { src: zenpayOTP, caption: "Email OTP verification" }
+        { src: zenpayCard, caption: "Virtual Card Screen" },
+        { src: zenpayProfile, caption: "Profile Screen" },
+        { src: zenpayLogin, caption: "Login / Welcome Screen" },
+        { src: zenpayOTP, caption: "Email OTP Verification" }
       ]
     },
     {
+      id: "pacetrack",
       title: "PaceTrack — Full-Stack Running Tracker",
-      description: "A production-ready mobile run tracker with live GPS route rendering, OTP verification, local storage, dashboard analytics, and text-to-speech coaching.",
-      tags: ["React Native", "Expo", "Node.js", "MongoDB Atlas", "JWT"],
+      description: "A mobile running tracker built with React Native and Expo featuring real-time GPS tracking, Haversine distance calculation, OSRM road-accurate route rendering, and voice-guided TTS coaching.",
+      tags: ["React Native", "Expo", "Node.js", "Express", "MongoDB Atlas", "JWT", "OSRM API"],
       githubLink: "https://github.com/tayabawan19/PaceTrack",
       icon: MapPin,
-      gradientText: "MOBILE APP",
+      gradientText: "GPS Mobile Tracker",
+      accentColor: "#06B6D4",
+      category: "Mobile Fitness",
+      problem: "Casual runners need accurate distance tracking and pace guidance without expensive subscription fees or inaccurate straight-line GPS measurements.",
+      solution: "A mobile run tracker that smooths GPS coordinates using Haversine formulas, plots road-accurate paths using OSRM, and coaches runners through text-to-speech milestone triggers.",
+      architecture: [
+        { layer: "Mobile Client", tech: "React Native & Expo", detail: "Expo Location background GPS polling and interactive map polyline rendering" },
+        { layer: "Routing Engine", tech: "OSRM Public API", detail: "Snaps raw GPS points to real road geometry for accurate mileage" },
+        { layer: "Backend API", tech: "Node.js & Express", detail: "REST service on Render with JWT authentication and bcrypt password hashing" },
+        { layer: "Database", tech: "MongoDB Atlas", detail: "Aggregation pipelines computing streak records and weekly distance totals" }
+      ],
+      challenges: [
+        { challenge: "Inaccurate pace measurements caused by noisy mobile GPS drift", solution: "Implemented a Haversine threshold filter that discards micro-jitter movements while stopped." }
+      ],
       achievements: [
-        "Built a secure authentication system with email OTP verification, bcrypt password/OTP hashing, and JWT session management",
-        "Implemented real-time GPS run tracking using Haversine distance calculation for live pace/distance updates",
-        "Integrated third-party routing (OSRM API) for road-accurate route planning with live polyline rendering on interactive maps",
-        "Designed a MongoDB aggregation pipeline for dashboard analytics (daily/weekly stats, streak calculation, achievement unlocking logic)",
-        "Built a gamification system (streaks, achievement badges) and local push notification engine",
-        "Implemented voice-guided run coaching using text-to-speech triggered at distance milestones",
-        "Designed a full light/dark theme system with persisted user preferences",
-        "Deployed a production REST API on Render connected to MongoDB Atlas, shipped Android build via EAS"
+        "Secure authentication system with email OTP verification and JWT session management",
+        "Real-time GPS run tracking with Haversine distance calculation for live pace and split times",
+        "Integrated OSRM routing API for road-accurate route planning and interactive map polylines",
+        "MongoDB aggregation pipelines computing daily/weekly stats, streaks, and achievement badges",
+        "Voice-guided audio coaching using text-to-speech triggered at distance milestones",
+        "Persistent light/dark theme system and Android EAS build distribution"
       ]
     },
     {
-      title: "CropSense — Pakistan Agricultural Intelligence Platform",
-      description: "A full-stack agricultural management system that digitizes farmer, crop, production, expense, and market data for Pakistan using MongoDB, Node.js, and a custom-built frontend.",
-      tags: ["MongoDB", "Node.js", "Express", "HTML5", "CSS3", "JavaScript", "Aggregation Pipelines", "Index Optimization"],
-      icon: Code2,
-      gradientText: "AGRI PLATFORM",
-      bgGradient: "from-[#3B82F6]/10 via-[#020817] to-[#020817]",
-      achievements: [
-        "Designed a 10-collection MongoDB document schema by migrating a full Oracle SQL relational model — demonstrating NoSQL denormalization and embedded document strategy",
-        "Created 45 indexes across all 10 collections: system, unique, compound, single-field, and multikey (embedded array) indexes — eliminating full collection scans for fast queries",
-        "Built a custom Index Manager UI tab showing all 45 indexes organized by collection with color-coded type badges and one-click mongosh query copy",
-        "Used MongoDB aggregation pipelines ($group, $sum) on the dashboard to compute total yield per crop, total expenses per category, and farmer/crop counts in real time",
-        "Implemented embedded document design — land parcels inside farms, expenses inside farm_records, prices inside markets — reducing the need for joins",
-        "Built full CRUD operations across 10 entities: Farmers, Farms, Crops, Records, Production, Expenses, Markets, Weather, Districts, Admin — with live search and toast notifications"
-      ]
-    },
-    {
-      title: "Food Delivery System",
-      description: "Console routing application modeling shortest path logistics for food deliveries using custom graph architectures and Dijkstra's algorithm.",
-      tags: ["C++", "Dijkstra's Algorithm", "Data Structures"],
+      id: "cropsense",
+      title: "CropSense — Pakistan Agricultural Platform",
+      description: "A full-stack agricultural management platform that digitizes farmer, crop, production, expense, and market data for Pakistan using MongoDB aggregation pipelines and 45 custom compound indexes.",
+      tags: ["MongoDB", "Node.js", "Express", "JavaScript", "Aggregation Pipelines", "Index Optimization"],
       githubLink: "https://github.com/tayabawan19",
       icon: Code2,
-      gradientText: "ROUTE ROUTER",
+      gradientText: "Agricultural Platform",
+      accentColor: "#3B82F6",
+      category: "Agricultural Intelligence",
+      problem: "Pakistan's agricultural sector suffers from fragmented paper records, missing yield trends, and unoptimized market pricing channels across districts.",
+      solution: "A centralized platform capturing 10 key entities with denormalized NoSQL schema design, eliminating joins and allowing instant aggregation of crop yields and regional pricing.",
+      architecture: [
+        { layer: "Frontend UI", tech: "Vanilla JS & HTML5/CSS3", detail: "Responsive dashboard with live search, custom index manager, and toast feedback" },
+        { layer: "API Layer", tech: "Node.js & Express", detail: "REST endpoints handling CRUD operations and aggregation queries across 10 entities" },
+        { layer: "Database", tech: "MongoDB Atlas", detail: "10 collections with 45 compound, single-field, and multikey indexes for sub-10ms queries" },
+        { layer: "Data Modeling", tech: "Denormalized Schema", detail: "Embedded land parcels in farms and expenses in records to avoid multi-collection lookups" }
+      ],
+      challenges: [
+        { challenge: "Slow dashboard aggregations across large historic production datasets", solution: "Created compound and multikey indexes specifically matching the $match and $group pipeline stages." }
+      ],
+      achievements: [
+        "Designed a 10-collection MongoDB schema migrating a relational model into an optimized NoSQL strategy",
+        "Created 45 custom indexes (system, unique, compound, multikey) eliminating full collection scans",
+        "Built a custom Index Manager UI showing all indexes with color-coded badges and one-click mongosh queries",
+        "Implemented MongoDB aggregation pipelines ($group, $sum) computing crop yields and district market prices",
+        "Built full CRUD operations across 10 entities with live search and responsive management tables"
+      ]
+    }
+  ];
+
+  // Secondary & Academic Projects dataset
+  const academicProjects = [
+    {
+      title: "Food Delivery System",
+      subtitle: "Shortest Route Solver",
+      description: "Console routing application modeling shortest path logistics for food deliveries using custom graph architectures and Dijkstra's algorithm in C++.",
+      tags: ["C++", "Dijkstra's Algorithm", "Graph Data Structures", "Min-Heap"],
+      githubLink: "https://github.com/tayabawan19",
+      icon: Code2,
       achievements: [
         "Implemented custom graph data structures using adjacency lists in C++",
         "Designed Dijkstra's shortest path routing algorithm to compute optimal delivery paths",
-        "Developed a console-based interactive UI for node coordinates and logistics management",
         "Optimized pathfinding lookup operations with an efficient min-heap priority queue"
       ]
     },
     {
       title: "Quiz Application",
-      description: "Interactive desktop quiz manager featuring administrative question authoring panels and modular design architectures in Java Swing.",
-      tags: ["Java", "OOP", "Java Swing"],
+      subtitle: "Desktop Examination Manager",
+      description: "Interactive desktop quiz manager featuring administrative question authoring panels and modular OOP design architectures in Java Swing.",
+      tags: ["Java", "OOP", "Java Swing", "CSV/JSON Loader"],
       githubLink: "https://github.com/tayabawan19",
       icon: Award,
-      gradientText: "DESKTOP APP",
       achievements: [
         "Engineered a modular Java Swing graphical user interface with responsive layouts",
         "Built administrative panels for real-time question authoring, editing, and deletion",
-        "Integrated file-based questions loader supporting custom CSV and JSON formats",
         "Designed OOP state managers to keep track of user scores, timers, and active quizzes"
       ]
     },
     {
       title: "Digital Diary App",
-      description: "Local logging utility employing stream I/O file operations to securely save, encrypt, and recall private user journal entries.",
-      tags: ["Java", "File Handling", "Data Security"],
+      subtitle: "File Security Utility",
+      description: "Local logging utility employing Java Stream I/O file operations to securely save, encrypt, and recall private user journal entries.",
+      tags: ["Java", "Stream I/O", "Data Security", "CLI"],
       githubLink: "https://github.com/tayabawan19",
       icon: BookOpen,
-      gradientText: "LOGGING SYSTEM",
       achievements: [
         "Leveraged Java Stream I/O File handling APIs to persist local user text entries",
-        "Implemented basic symmetric XOR encryption/decryption keys to protect diary text",
-        "Built keywords index mapping to support instantaneous lookup of older entries",
-        "Designed an elegant CLI terminal flow with user credentials authentication"
+        "Implemented symmetric encryption keys to protect diary text on disk",
+        "Built keywords index mapping to support instantaneous lookup of older entries"
       ]
     },
     {
       title: "University Student Resource Ecosystem",
-      description: "Engineered detailed requirements manuals (SRS) containing UML diagrams, database schemas, and Agile task models.",
-      tags: ["SRS Documentation", "Systems Analysis", "Agile"],
+      subtitle: "Systems Engineering Document (SRS)",
+      description: "Authored comprehensive Software Requirements Specification (SRS) manuals containing IEEE-compliant UML diagrams, normalized relational schemas, and Agile task models.",
+      tags: ["SRS Documentation", "UML Modeling", "Database Design", "Agile"],
       githubLink: "https://github.com/tayabawan19",
       icon: GraduationCap,
-      gradientText: "ENGINEERING DOC",
       achievements: [
         "Authored an IEEE-compliant Software Requirements Specification (SRS) manual",
         "Designed comprehensive UML structural models, Class Diagrams, and Use Case flows",
-        "Modeled normalized relational database schemas with exact cardinality rules",
-        "Created Agile sprint backlogs, user story mappings, and Jira project boards"
+        "Modeled normalized relational database schemas with exact cardinality rules"
       ]
     },
     {
-      title: "Social Media Management Tool",
-      description: "Mapped structural software engineering phases drafting SDLC models, risk mitigations, system designs, and testing logs.",
-      tags: ["SDLC", "Software Engineering", "Risk Analysis"],
+      title: "Online Social Media Management Tool",
+      subtitle: "Project Lifecycle Specification (SDLC)",
+      description: "Mapped structural software engineering phases drafting SDLC models, risk mitigations, system architectural blueprints, and testing logs.",
+      tags: ["SDLC", "Software Engineering", "Risk Analysis", "QA Testing"],
       githubLink: "https://github.com/tayabawan19",
       icon: Globe,
-      gradientText: "MANAGEMENT SPEC",
       achievements: [
         "Drafted a complete Software Development Life Cycle (SDLC) model for a media suite",
         "Formulated a comprehensive project risk analysis matrix with quantitative mitigations",
-        "Designed architectural blueprints covering load balancers and caching strategies",
-        "Compiled rigorous manual testing logs, test plans, and black-box verification cycles"
+        "Compiled manual testing logs, test plans, and black-box verification cycles"
       ]
     },
     {
       title: "JhootayShootay E-Commerce Store",
-      description: "Operational WordPress storefront prototype hosted on Pantheon.io sandbox featuring WooCommerce payment flows and SEO tags.",
+      subtitle: "WordPress WooCommerce Prototype",
+      description: "Operational WordPress storefront prototype hosted on Pantheon.io sandbox featuring WooCommerce payment flows, product catalog categorization, and SEO tags.",
       tags: ["WordPress", "WooCommerce", "Pantheon.io", "SEO"],
       githubLink: "https://github.com/tayabawan19",
       liveLink: "https://dev-jootay-shootay.pantheonsite.io/",
       icon: Wrench,
-      gradientText: "E-COMMERCE STORE",
       achievements: [
-        "Developed and customized a modern shoe e-commerce store using WordPress CMS",
-        "Configured WooCommerce settings, including catalog categorization and payment flows",
-        "Deployed the active site sandbox environment to Pantheon.io hosting servers",
+        "Developed and customized a modern e-commerce store using WordPress CMS",
+        "Configured WooCommerce catalog categorization and payment flows",
         "Optimized product pages with descriptive metadata tags for SEO crawl indexing"
       ]
     }
   ];
 
-  // Skill sets grouped
+  // Combined for backwards-compatibility
+  const projectsList = [...featuredProjects, ...academicProjects];
+
+  // Reorganized Skill sets grouped according to specifications
   const skillCategories = [
-    { title: "Languages", skills: ["Java", "C++", "Python", "TypeScript"] },
-    { title: "Mobile/Frontend", skills: ["React Native", "Expo", "React", "Next.js", "GSAP"] },
-    { title: "Backend", skills: ["Node.js", "Express", "REST API", "JWT", "Gemini API", "Brevo API"] },
-    { title: "Cloud & Auth", skills: ["Firebase Auth", "Cloud Firestore", "Stripe API", "EAS Build", "Render", "Supabase Auth", "Supabase Realtime"] },
-    { title: "Databases", skills: ["MongoDB", "Oracle SQL", "Aggregation Pipelines", "Index Optimization", "Supabase", "PostgreSQL", "Row Level Security"] },
-    { title: "Machine Learning", skills: ["Python (ML)", "Data Analysis", "Model Development", "Scikit-learn"] },
-    { title: "Tools & Platforms", skills: ["VS Code", "Figma", "Canva", "WordPress", "Git", "GitHub"] },
-    { title: "Concepts", skills: ["OOP", "Data Structures", "SDLC", "SRS/SDS Documentation"] }
+    { title: "Languages", skills: ["Java", "C++", "Python", "JavaScript", "TypeScript"] },
+    { title: "Frontend", skills: ["React", "Next.js", "HTML5", "CSS3", "Tailwind CSS"] },
+    { title: "Mobile", skills: ["React Native", "Expo", "Expo Router"] },
+    { title: "Backend", skills: ["Node.js", "Express", "REST APIs", "JWT", "Brevo API"] },
+    { title: "Databases", skills: ["PostgreSQL", "MongoDB", "Firebase Firestore", "Oracle SQL", "Row Level Security"] },
+    { title: "AI / ML", skills: ["Python (ML)", "Scikit-Learn", "Google Gemini API", "Groq / Llama APIs", "Prompt Engineering"] },
+    { title: "Tools & Platforms", skills: ["Git", "GitHub", "VS Code", "Figma", "Render", "Vercel"] },
+    { title: "Core Engineering", skills: ["OOP", "Data Structures & Algorithms", "System Design", "SRS Documentation"] }
   ];
 
   const handleScrollTo = (targetId) => {
@@ -436,19 +502,19 @@ function LandingPage() {
   return (
     <>
       {/* Hero Section */}
-      <section id="home" className="min-h-screen flex items-center pt-28 pb-16 relative overflow-hidden bg-transparent">
-        {/* Glow grid helper */}
+      <section id="home" className="min-h-[92vh] flex items-center pt-28 pb-16 relative overflow-hidden bg-transparent">
+        {/* Subtle radial cyan glow */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#06B6D4]/5 via-transparent to-transparent pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-6 md:px-12 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center w-full relative z-10">
 
-          {/* Hero Left Content */}
+          {/* Hero Left Content: Narrative & Positioning */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={{
               hidden: { opacity: 0 },
-              visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
+              visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
             }}
             className="lg:col-span-7 flex flex-col justify-center text-left space-y-6"
           >
@@ -457,62 +523,62 @@ function LandingPage() {
               variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
               className="inline-flex items-center space-x-2 text-[#06B6D4]"
             >
-              <span className="text-xs font-mono font-bold uppercase tracking-[0.25em]">
-                ◆ BS SOFTWARE ENGINEERING — COMSATS ISLAMABAD ◆
+              <span className="text-[11px] sm:text-xs font-mono font-bold uppercase tracking-[0.2em] px-3 py-1 rounded-full bg-[#06B6D4]/10 border border-[#06B6D4]/25">
+                ◆ Software Engineering Student @ COMSATS ◆
               </span>
             </motion.div>
 
             {/* Name */}
             <motion.h1
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              className="text-4xl md:text-6xl font-bold tracking-tight text-white font-display leading-tight"
+              className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white font-display leading-[1.1]"
             >
               Muhammad Tayyab Tanveer
             </motion.h1>
 
-            {/* Developer Title */}
-            <motion.h2
+            {/* Developer Direction */}
+            <motion.p
               variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-              className="text-3xl md:text-5xl font-bold font-display leading-none text-white/90"
+              className="text-xl sm:text-2xl font-bold font-display text-[#06B6D4] tracking-wide"
             >
-              Full-Stack <span className="text-[#06B6D4]" style={{ textShadow: "0 0 30px rgba(6,182,212,0.25)" }}>Developer</span>
-            </motion.h2>
+              Full-Stack & Mobile Developer <span className="text-white/30">|</span> AI/ML Enthusiast
+            </motion.p>
 
             {/* Paragraph Description */}
             <motion.p
               variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-              className="text-sm md:text-base text-white/55 leading-relaxed font-sans max-w-xl text-left"
+              className="text-sm sm:text-base text-white/65 leading-relaxed font-sans max-w-xl text-left"
             >
-              Building real systems, one semester at a time at <span className="text-[#06B6D4] font-semibold">COMSATS University Islamabad</span>. Currently in my <span className="text-[#06B6D4] font-semibold">4th semester</span> with a <span className="text-[#06B6D4] font-semibold">CGPA of 3.1</span>, I specialize in crafting robust backend architectures, cross-platform mobile apps, and detailed engineering design manuals.
+              Software Engineering student at COMSATS University Islamabad building practical, production-style software across full-stack web platforms, mobile apps, and applied AI systems. Currently in my 4th semester with a 3.1 CGPA.
             </motion.p>
 
-            {/* Social Icons (circular outline buttons) */}
+            {/* Social Icons */}
             <motion.div
               variants={{ hidden: { opacity: 0, y: 15 }, visible: { opacity: 1, y: 0 } }}
-              className="flex items-center space-x-4 pt-2"
+              className="flex items-center space-x-3 pt-1"
             >
-              <a
-                href="https://www.linkedin.com/in/tayabawan19"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/10 hover:border-[#06B6D4] hover:bg-[#06B6D4]/10 text-white/60 hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
-                aria-label="LinkedIn"
-              >
-                <LinkedInIcon size={18} />
-              </a>
               <a
                 href="https://github.com/tayabawan19"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-10 h-10 rounded-full border border-white/10 hover:border-[#06B6D4] hover:bg-[#06B6D4]/10 text-white/60 hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
-                aria-label="GitHub"
+                className="w-10 h-10 rounded-full border border-white/10 hover:border-[#06B6D4] hover:bg-[#06B6D4]/10 text-white/70 hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
+                aria-label="GitHub Profile (tayabawan19)"
               >
                 <GitHubIcon size={18} />
               </a>
               <a
+                href="https://www.linkedin.com/in/tayabawan19"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-full border border-white/10 hover:border-[#06B6D4] hover:bg-[#06B6D4]/10 text-white/70 hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
+                aria-label="LinkedIn Profile"
+              >
+                <LinkedInIcon size={18} />
+              </a>
+              <a
                 href="mailto:tayabawan.in@gmail.com"
-                className="w-10 h-10 rounded-full border border-white/10 hover:border-[#06B6D4] hover:bg-[#06B6D4]/10 text-white/60 hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
-                aria-label="Email"
+                className="w-10 h-10 rounded-full border border-white/10 hover:border-[#06B6D4] hover:bg-[#06B6D4]/10 text-white/70 hover:text-white transition-all duration-300 flex items-center justify-center cursor-pointer"
+                aria-label="Email (tayabawan.in@gmail.com)"
               >
                 <Mail size={18} />
               </a>
@@ -521,28 +587,93 @@ function LandingPage() {
             {/* CTAs */}
             <motion.div
               variants={{ hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } }}
-              className="flex flex-wrap items-center gap-4 pt-4"
+              className="flex flex-wrap items-center gap-4 pt-2"
             >
               <button
                 onClick={() => handleScrollTo('#projects')}
-                className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all duration-300 font-mono shadow-md shadow-[#06B6D4]/20 hover:shadow-[#06B6D4]/40 cursor-pointer flex items-center space-x-1.5"
+                className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all duration-300 font-mono shadow-md shadow-[#06B6D4]/20 hover:shadow-[#06B6D4]/40 cursor-pointer flex items-center space-x-2"
               >
-                <span>View Projects →</span>
+                <span>View My Work</span>
+                <ArrowRight size={14} />
+              </button>
+              <button
+                onClick={() => handleScrollTo('#contact')}
+                className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white border border-white/15 hover:border-white hover:bg-white/5 rounded-md transition-all duration-300 font-mono cursor-pointer"
+              >
+                <span>Let's Connect</span>
               </button>
               <a
                 href="/resume.pdf"
                 download="Tayyab_Tanveer_Resume.pdf"
-                className="px-6 py-3.5 text-xs font-bold uppercase tracking-wider text-white border border-white/15 hover:border-white hover:bg-white/5 rounded-md transition-all duration-300 font-mono cursor-pointer flex items-center space-x-1.5"
+                className="px-4 py-3.5 text-xs font-mono text-white/50 hover:text-white flex items-center gap-1.5 transition-colors"
               >
-                <span>Download CV ↓</span>
+                <Download size={14} className="text-[#06B6D4]" />
+                <span>Resume</span>
               </a>
             </motion.div>
           </motion.div>
 
-          {/* Hero Right Column: AI Avatar Intro Video */}
-          <div className="lg:col-span-5 flex justify-center items-center relative w-full min-h-[320px]">
-            <AvatarVideo />
-          </div>
+          {/* Hero Right Column: Professional Profile Photo Card */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="lg:col-span-5 flex flex-col items-center justify-center relative"
+          >
+            <div className="relative w-full max-w-[340px] sm:max-w-[380px] group">
+              {/* Subtle ambient glow behind image */}
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#06B6D4]/20 to-[#3B82F6]/20 rounded-3xl blur-xl opacity-60 group-hover:opacity-90 transition-opacity" />
+              
+              {/* Photo Frame */}
+              <div className="relative rounded-2xl overflow-hidden border border-white/10 bg-[#020817] shadow-2xl p-2.5">
+                <div className="relative w-full aspect-[4/5] rounded-xl overflow-hidden bg-white/[0.02]">
+                  <img
+                    src={profilePhoto}
+                    alt="Muhammad Tayyab Tanveer - Software Engineer"
+                    width={380}
+                    height={475}
+                    fetchPriority="high"
+                    className="w-full h-full object-cover object-top filter brightness-[1.02] contrast-[1.03] group-hover:scale-[1.02] transition-transform duration-500"
+                  />
+                  
+                  {/* Subtle vignette gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#020817]/90 via-transparent to-transparent pointer-events-none" />
+
+                  {/* Top Badge: Active Status */}
+                  <div className="absolute top-3 left-3 px-3 py-1 rounded-full bg-[#020817]/85 backdrop-blur-md border border-white/10 flex items-center gap-2 shadow-lg">
+                    <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                    <span className="text-[10px] font-mono font-bold text-white/90 uppercase tracking-wider">
+                      Available for Opportunities
+                    </span>
+                  </div>
+
+                  {/* Bottom Credentials Tag */}
+                  <div className="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-[#020817]/90 backdrop-blur-md border border-white/10 text-left">
+                    <p className="text-xs font-bold text-white font-display">
+                      Muhammad Tayyab Tanveer
+                    </p>
+                    <p className="text-[10px] font-mono text-[#06B6D4] uppercase tracking-wider">
+                      COMSATS SE • 4th Semester (3.1 CGPA)
+                    </p>
+                  </div>
+                </div>
+
+                {/* Video intro button toggle */}
+                <div className="pt-2 px-1 flex items-center justify-between">
+                  <span className="text-[11px] font-mono text-white/40">
+                    Islamabad, Pakistan
+                  </span>
+                  <button
+                    onClick={() => handleScrollTo('#intro-video')}
+                    className="text-[11px] font-mono text-[#06B6D4] hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer py-1"
+                  >
+                    <Play size={12} className="fill-[#06B6D4]" />
+                    <span>Watch Video Intro ↓</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
 
         </div>
       </section>
@@ -554,15 +685,18 @@ function LandingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mt-6">
           {/* About Left: Text Card */}
           <div className="lg:col-span-7 space-y-6">
-            <div className="glass-card p-8 rounded-2xl border-l-4 border-l-[#06B6D4] text-left">
-              <h3 className="text-xl md:text-2xl font-bold font-display text-white tracking-wide mb-4 uppercase">
-                Building real systems, one semester at a time
+            <div className="glass-card p-8 md:p-10 rounded-2xl border-l-4 border-l-[#06B6D4] text-left space-y-4">
+              <h3 className="text-xl md:text-2xl font-bold font-display text-white tracking-wide uppercase">
+                Building serious systems through practical engineering
               </h3>
-              <p className="text-sm md:text-base text-white/55 font-sans leading-relaxed mb-4">
-                I am a 4th semester Software Engineering student at COMSATS University Islamabad (Main Campus) holding a CGPA of 3.1. I view software engineering not just as code syntax, but as building fully structural, performant, and well-designed solutions. My coursework challenges me to build functional projects every semester, applying computer science theory to direct deliverables.
+              <p className="text-sm md:text-base text-white/70 font-sans leading-relaxed">
+                I am a Software Engineering student in my 4th semester at <span className="text-white font-medium">COMSATS University Islamabad</span> (CGPA 3.1). My approach to software is grounded in strong computer science fundamentals and learning by building real, practical applications that solve actual problems.
               </p>
-              <p className="text-sm text-white/35 font-sans leading-relaxed">
-                During my AI-Powered Data Analysis remote internship at Excelerate, I applied parsing pipelines and statistical modeling concepts to real datasets. From Dijkstra route finders in C++ to custom React Native trackers and WordPress setups, my portfolio captures a continuous focus on system architectures and documentation standards.
+              <p className="text-sm md:text-base text-white/70 font-sans leading-relaxed">
+                Over the past two years, I have built full-stack web platforms with <span className="text-[#06B6D4] font-medium">Next.js</span> and <span className="text-[#06B6D4] font-medium">Supabase</span>, mobile applications with <span className="text-[#06B6D4] font-medium">React Native</span> and <span className="text-[#06B6D4] font-medium">Expo</span>, and structured backend systems with <span className="text-[#06B6D4] font-medium">Node.js</span> and <span className="text-[#06B6D4] font-medium">MongoDB</span>. Through hands-on internships and independent work, I am actively expanding into machine learning and LLM integrations.
+              </p>
+              <p className="text-xs md:text-sm text-white/45 font-sans leading-relaxed pt-1">
+                My ambition is to grow into an engineer who architects resilient distributed backends, clean mobile experiences, and intelligent AI-driven applications from first principles.
               </p>
             </div>
           </div>
@@ -570,35 +704,101 @@ function LandingPage() {
           {/* About Right: Stats counters */}
           <div className="lg:col-span-5 grid grid-cols-2 gap-4">
             {/* PROJECTS BUILT */}
-            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1">
+            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1 transition-transform">
               <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">
-                <StatCounter value="10" />
+                <StatCounter value="10" suffix="+" />
               </h4>
               <span className="text-[10px] font-bold font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">PROJECTS BUILT</span>
             </div>
 
             {/* INTERNSHIPS */}
-            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1">
+            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1 transition-transform">
               <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">
                 <StatCounter value="2" />
               </h4>
-              <span className="text-[10px] font-bold font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">INTERNSHIPS</span>
+              <span className="text-[10px] font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">INTERNSHIPS</span>
             </div>
 
             {/* CGPA */}
-            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1">
+            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1 transition-transform">
               <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">
                 <StatCounter value="3.1" />
               </h4>
-              <span className="text-[10px] font-bold font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">CGPA</span>
+              <span className="text-[10px] font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">CGPA</span>
             </div>
 
             {/* SEMESTER */}
-            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1">
+            <div className="glass-card p-6 rounded-xl flex flex-col justify-center items-center text-center h-36 hover:-translate-y-1 transition-transform">
               <h4 className="text-3xl md:text-4xl font-extrabold text-white font-display">
                 <StatCounter value="4" suffix="th" />
               </h4>
-              <span className="text-[10px] font-bold font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">SEMESTER</span>
+              <span className="text-[10px] font-mono tracking-widest text-[#06B6D4] mt-2 uppercase">SEMESTER</span>
+            </div>
+          </div>
+        </div>
+      </RevealSection>
+
+      {/* Dedicated Video Introduction Section */}
+      <RevealSection id="intro-video" className="max-w-6xl">
+        <SectionHeader eyebrow="MULTIMEDIA" whiteText="Video" cyanText="Introduction" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-center mt-6">
+          {/* Left Narrative */}
+          <div className="lg:col-span-6 space-y-6 text-left">
+            <div className="space-y-2">
+              <span className="text-[11px] font-mono font-bold tracking-widest text-[#06B6D4] uppercase">
+                MEET THE ENGINEER
+              </span>
+              <h3 className="text-2xl md:text-3xl font-bold font-display text-white">
+                Hi, I'm Muhammad Tayyab Tanveer
+              </h3>
+            </div>
+
+            <p className="text-sm md:text-base text-white/70 font-sans leading-relaxed">
+              Watch this interactive introduction to learn about my engineering philosophy, technical journey across full-stack web and mobile development, and my ongoing projects at COMSATS University Islamabad.
+            </p>
+
+            <div className="space-y-3 pt-2">
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-[#020817] border border-white/5">
+                <span className="w-2 h-2 rounded-full bg-[#06B6D4] mt-2 shrink-0 shadow-[0_0_8px_#06B6D4]" />
+                <div>
+                  <h4 className="text-xs font-bold font-mono text-white uppercase">Software Engineering @ COMSATS</h4>
+                  <p className="text-xs text-white/50 mt-0.5">4th semester student focused on software architecture, clean APIs, and distributed data systems.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-[#020817] border border-white/5">
+                <span className="w-2 h-2 rounded-full bg-cyan-400 mt-2 shrink-0 shadow-[0_0_8px_#22d3ee]" />
+                <div>
+                  <h4 className="text-xs font-bold font-mono text-white uppercase">Full-Stack & Mobile Development</h4>
+                  <p className="text-xs text-white/50 mt-0.5">Production-style apps with Next.js, Supabase, React Native, Expo, and Node.js.</p>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3 p-3.5 rounded-xl bg-[#020817] border border-white/5">
+                <span className="w-2 h-2 rounded-full bg-blue-400 mt-2 shrink-0 shadow-[0_0_8px_#60a5fa]" />
+                <div>
+                  <h4 className="text-xs font-bold font-mono text-white uppercase">Applied AI & Machine Learning</h4>
+                  <p className="text-xs text-white/50 mt-0.5">Hands-on experience with Google Gemini API, Groq/Llama models, and Python ML pipelines.</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-2 flex items-center gap-4">
+              <button
+                onClick={() => handleScrollTo('#projects')}
+                className="px-5 py-3 text-xs font-mono font-bold uppercase tracking-wider text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all shadow-md shadow-[#06B6D4]/20 flex items-center gap-2 cursor-pointer"
+              >
+                <span>Explore Featured Projects</span>
+                <ArrowRight size={14} />
+              </button>
+            </div>
+          </div>
+
+          {/* Right Video Player */}
+          <div className="lg:col-span-6 flex justify-center items-center">
+            <div className="w-full max-w-[480px]">
+              <AvatarVideo />
             </div>
           </div>
         </div>
@@ -791,11 +991,11 @@ function LandingPage() {
               </motion.div>
             </div>
 
-            {/* Academic Projects Node */}
+            {/* Education Node */}
             <div className="relative flex flex-col md:flex-row items-start md:justify-between w-full">
               {/* Node Circle */}
               <div className="absolute left-4 md:left-1/2 w-8 h-8 rounded-full bg-[#020817] border-2 border-[#06B6D4] flex items-center justify-center transform -translate-x-1/2 shadow-[0_0_12px_rgba(6,182,212,0.4)] z-10">
-                <Rocket className="text-[#06B6D4] w-4 h-4" />
+                <GraduationCap className="text-[#06B6D4] w-4 h-4" />
               </div>
 
               {/* Left Card Content */}
@@ -811,16 +1011,19 @@ function LandingPage() {
               >
                 <div className="glass-card p-6 md:p-8 rounded-2xl text-left border-t-2 border-t-[#06B6D4] hover:border-t-[#3B82F6] transition-all duration-300">
                   <span className="text-[10px] font-mono font-bold tracking-widest text-[#06B6D4] uppercase">
-                    2024 – PRESENT
+                    2024 – 2028  |  BACHELOR OF SCIENCE
                   </span>
                   <h3 className="text-xl font-bold font-display text-white mt-1">
-                    Academic Projects
+                    BS Software Engineering
                   </h3>
-                  <h4 className="text-sm font-semibold font-sans text-[#06B6D4] mt-0.5">
+                  <h4 className="text-sm font-semibold font-sans text-white/90 mt-0.5">
                     COMSATS University Islamabad
                   </h4>
-                  <p className="text-xs md:text-sm text-white/55 font-sans leading-relaxed mt-4">
-                    Successfully designed and developed 7 core academic projects across Data Structures & Algorithms, Object-Oriented Programming, Software Requirement Engineering, and Mobile App Development. Handled full project cycle implementation from system modeling documents to live production rest APIs.
+                  <p className="text-xs text-[#06B6D4] font-mono tracking-wider uppercase mt-1">
+                    4th Semester • CGPA: 3.1
+                  </p>
+                  <p className="text-xs md:text-sm text-white/60 font-sans leading-relaxed mt-4">
+                    Rigorous computer science & engineering foundations covering Data Structures & Algorithms, Object-Oriented Programming, Database Systems, and IEEE-standard Software Requirements Engineering.
                   </p>
                 </div>
               </motion.div>
@@ -837,53 +1040,132 @@ function LandingPage() {
       <RevealSection id="projects" className="max-w-7xl">
         <SectionHeader eyebrow="PORTFOLIO" whiteText="Featured" cyanText="Projects" />
 
-        {/* 3-column / 2-column / 1-column grid layout */}
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.01 }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: { staggerChildren: 0.08 }
-            }
-          }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 mt-12"
-        >
-          {projectsList.map((project, idx) => (
-            <motion.div 
-              key={idx}
-              variants={{
-                hidden: { opacity: 0, y: 30 },
-                visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-              }}
+        {/* Tab Selector for Project Categories */}
+        <div className="flex justify-center items-center gap-3 mb-10">
+          <button
+            onClick={() => setProjectTab('featured')}
+            className={`px-5 py-2 rounded-full text-xs font-mono font-bold tracking-wider uppercase transition-all cursor-pointer ${
+              projectTab === 'featured'
+                ? 'bg-[#06B6D4] text-white shadow-lg shadow-[#06B6D4]/20'
+                : 'bg-white/[0.04] text-white/60 hover:text-white border border-white/10'
+            }`}
+          >
+            Featured Engineering (4)
+          </button>
+          <button
+            onClick={() => setProjectTab('all')}
+            className={`px-5 py-2 rounded-full text-xs font-mono font-bold tracking-wider uppercase transition-all cursor-pointer ${
+              projectTab === 'all'
+                ? 'bg-[#06B6D4] text-white shadow-lg shadow-[#06B6D4]/20'
+                : 'bg-white/[0.04] text-white/60 hover:text-white border border-white/10'
+            }`}
+          >
+            All Projects (10)
+          </button>
+        </div>
+
+        {/* Featured Projects Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {featuredProjects.map((project, idx) => (
+            <motion.div
+              key={project.id || idx}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.05 }}
+              transition={{ duration: 0.5, delay: idx * 0.08 }}
+              className="h-full"
             >
-              <Suspense fallback={
-                <div className="h-96 rounded-[10px] border border-white/5 bg-white/[0.02] flex items-center justify-center text-white/20">
-                  Loading project details...
-                </div>
-              }>
+              <Suspense fallback={<div className="h-96 rounded-xl bg-white/[0.02] border border-white/5 animate-pulse" />}>
                 <ProjectCard
-                  title={project.title}
-                  description={project.description}
-                  tags={project.tags}
-                  githubLink={project.githubLink}
-                  liveLink={project.liveLink}
-                  icon={project.icon}
-                  gradientText={project.gradientText}
-                  bgGradient={project.bgGradient}
-                  achievements={project.achievements}
-                  screenshots={project.screenshots}
-                  number={idx + 1}
-                  video={project.video}
-                  isFlagship={project.isFlagship}
-                  accentColor={project.accentColor}
+                  project={{ ...project, number: idx + 1 }}
+                  onOpenCaseStudy={setSelectedCaseStudy}
                 />
               </Suspense>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
+
+        {/* Academic & Secondary Projects Section */}
+        {projectTab === 'all' && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mt-16 pt-12 border-t border-white/10 text-left space-y-6"
+          >
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono uppercase tracking-widest text-[#06B6D4] font-bold">
+                ACADEMIC & SYSTEMS FOUNDATIONS
+              </span>
+              <h3 className="text-xl font-bold font-display text-white">
+                Coursework & Algorithmic Projects
+              </h3>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {academicProjects.map((project, idx) => (
+                <div
+                  key={idx}
+                  className="p-6 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/30 transition-all flex flex-col justify-between space-y-4"
+                >
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="w-9 h-9 rounded-lg bg-[#06B6D4]/10 border border-[#06B6D4]/20 flex items-center justify-center text-[#06B6D4]">
+                        {project.icon ? <project.icon size={18} /> : <Code2 size={18} />}
+                      </div>
+                      <span className="text-[10px] font-mono text-white/40">#{idx + 5}</span>
+                    </div>
+
+                    <div>
+                      <span className="text-[10px] font-mono text-[#06B6D4] uppercase tracking-wider block">
+                        {project.subtitle}
+                      </span>
+                      <h4 className="text-base font-bold font-display text-white mt-0.5">
+                        {project.title}
+                      </h4>
+                    </div>
+
+                    <p className="text-xs text-white/60 font-sans leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {project.tags.map((t, tIdx) => (
+                        <span key={tIdx} className="px-2 py-0.5 text-[10px] font-mono bg-white/[0.04] rounded text-white/70">
+                          {t}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                    <a
+                      href={project.githubLink || "https://github.com/tayabawan19"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-mono text-white/50 hover:text-white flex items-center gap-1.5 transition-colors cursor-pointer"
+                    >
+                      <GitHubIcon size={14} />
+                      <span>Source</span>
+                    </a>
+
+                    {project.liveLink && (
+                      <a
+                        href={project.liveLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs font-mono text-[#06B6D4] hover:underline flex items-center gap-1 cursor-pointer"
+                      >
+                        <span>Demo</span>
+                        <ExternalLink size={12} />
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        )}
       </RevealSection>
 
       {/* Build Log Preview Section */}
@@ -964,9 +1246,127 @@ function LandingPage() {
         </div>
       </RevealSection>
 
-      {/* Client Reviews Section */}
+      {/* GitHub Showcase Section */}
+      <RevealSection id="github">
+        <SectionHeader eyebrow="OPEN SOURCE" whiteText="GitHub" cyanText="Activity" />
+        
+        <div className="max-w-5xl mx-auto space-y-8">
+          <div className="p-6 md:p-8 rounded-2xl glass-card border border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 text-left">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2">
+                <GitHubIcon size={20} className="text-white" />
+                <h3 className="text-lg md:text-xl font-bold font-display text-white">
+                  github.com/tayabawan19
+                </h3>
+              </div>
+              <p className="text-xs sm:text-sm text-white/60 font-sans max-w-xl">
+                Explore my open-source code repositories, full-stack architectures, mobile apps, and machine learning scripts on GitHub.
+              </p>
+            </div>
+
+            <a
+              href="https://github.com/tayabawan19"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-5 py-3 text-xs font-mono font-bold uppercase tracking-wider text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all shadow-md shadow-[#06B6D4]/20 flex items-center gap-2 cursor-pointer shrink-0"
+            >
+              <span>Explore All Repositories</span>
+              <ArrowRight size={14} />
+            </a>
+          </div>
+
+          {/* Pinned Repositories Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
+            {/* Repo 1: ProofFolio */}
+            <div className="p-5 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/40 transition-all space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Code2 size={16} className="text-[#06B6D4]" />
+                  <a href="https://github.com/tayabawan19" target="_blank" rel="noopener noreferrer" className="font-mono text-sm font-bold text-white hover:text-[#06B6D4] transition-colors">
+                    ProofFolio
+                  </a>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20">
+                  Public
+                </span>
+              </div>
+              <p className="text-xs text-white/60 font-sans line-clamp-2">
+                AI-powered student project marketplace with Gemini AI auto-evaluation, Supabase RLS, and Brevo OTP.
+              </p>
+              <div className="flex items-center gap-3 text-[11px] font-mono text-white/40 pt-1">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-cyan-400"></span>Next.js / TypeScript</span>
+              </div>
+            </div>
+
+            {/* Repo 2: ZenPay */}
+            <div className="p-5 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/40 transition-all space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Code2 size={16} className="text-[#06B6D4]" />
+                  <a href="https://github.com/tayabawan19/ZenPay" target="_blank" rel="noopener noreferrer" className="font-mono text-sm font-bold text-white hover:text-[#06B6D4] transition-colors">
+                    ZenPay
+                  </a>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20">
+                  Public
+                </span>
+              </div>
+              <p className="text-xs text-white/60 font-sans line-clamp-2">
+                Production-style mobile fintech digital wallet with atomic P2P transfers, virtual cards, and Firebase.
+              </p>
+              <div className="flex items-center gap-3 text-[11px] font-mono text-white/40 pt-1">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-blue-400"></span>React Native / Expo</span>
+              </div>
+            </div>
+
+            {/* Repo 3: PaceTrack */}
+            <div className="p-5 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/40 transition-all space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Code2 size={16} className="text-[#06B6D4]" />
+                  <a href="https://github.com/tayabawan19/PaceTrack" target="_blank" rel="noopener noreferrer" className="font-mono text-sm font-bold text-white hover:text-[#06B6D4] transition-colors">
+                    PaceTrack
+                  </a>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20">
+                  Public
+                </span>
+              </div>
+              <p className="text-xs text-white/60 font-sans line-clamp-2">
+                Full-stack mobile running tracker with live GPS Haversine calculation, OSRM routing, and TTS audio coaching.
+              </p>
+              <div className="flex items-center gap-3 text-[11px] font-mono text-white/40 pt-1">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-emerald-400"></span>React Native / Node.js</span>
+              </div>
+            </div>
+
+            {/* Repo 4: CropSense */}
+            <div className="p-5 rounded-xl bg-[#020817] border border-white/10 hover:border-[#06B6D4]/40 transition-all space-y-3">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Code2 size={16} className="text-[#06B6D4]" />
+                  <a href="https://github.com/tayabawan19" target="_blank" rel="noopener noreferrer" className="font-mono text-sm font-bold text-white hover:text-[#06B6D4] transition-colors">
+                    CropSense
+                  </a>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-[#06B6D4]/10 text-[#06B6D4] border border-[#06B6D4]/20">
+                  Public
+                </span>
+              </div>
+              <p className="text-xs text-white/60 font-sans line-clamp-2">
+                Agricultural intelligence platform with 10 collections, 45 custom compound indexes, and aggregation pipelines.
+              </p>
+              <div className="flex items-center gap-3 text-[11px] font-mono text-white/40 pt-1">
+                <span className="flex items-center gap-1.5"><span className="w-2 h-2 rounded-full bg-green-500"></span>MongoDB / Express</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </RevealSection>
+
+      {/* Teammate Endorsements Section */}
       <RevealSection id="reviews">
-        <SectionHeader eyebrow="TESTIMONIALS" whiteText="Client" cyanText="Reviews" />
+        <SectionHeader eyebrow="COLLABORATION" whiteText="Teammate" cyanText="Feedback" />
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 mt-6">
           {/* Review 1 */}
@@ -1041,7 +1441,7 @@ function LandingPage() {
 
       {/* Contact Section */}
       <RevealSection id="contact">
-        <SectionHeader eyebrow="CONTACT" whiteText="Get In" cyanText="Touch" />
+        <SectionHeader eyebrow="GET IN TOUCH" whiteText="Let's" cyanText="Talk" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mt-6">
           {/* Contact Left: Form */}
@@ -1358,6 +1758,36 @@ function LandingPage() {
                 </div>
               )
             )}
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Case Study Modal */}
+      <CaseStudyModal
+        project={selectedCaseStudy}
+        isOpen={!!selectedCaseStudy}
+        onClose={() => setSelectedCaseStudy(null)}
+      />
+
+      {/* Video Intro Modal */}
+      {isVideoModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+          <div className="relative w-full max-w-lg bg-[#020817] border border-white/10 rounded-2xl p-6 shadow-2xl text-left">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3 mb-4">
+              <span className="text-xs font-mono font-bold text-[#06B6D4] uppercase tracking-wider">
+                Interactive Introduction
+              </span>
+              <button
+                onClick={() => setIsVideoModalOpen(false)}
+                className="w-8 h-8 rounded-full border border-white/10 hover:border-white/30 text-white/70 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                aria-label="Close video"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="rounded-xl overflow-hidden bg-black flex items-center justify-center">
+              <AvatarVideo />
+            </div>
           </div>
         </div>
       )}

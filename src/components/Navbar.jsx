@@ -4,13 +4,14 @@ import { Menu, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
-  { label: 'ABOUT', id: '#about' },
-  { label: 'SKILLS', id: '#skills' },
-  { label: 'SERVICES', id: '#services' },
-  { label: 'EXPERIENCE', id: '#experience' },
-  { label: 'PROJECTS', id: '#projects' },
-  { label: 'BUILD LOG', id: '/build-log', isRoute: true },
-  { label: 'REVIEWS', id: '#reviews' }
+  { label: 'Home', id: '#home' },
+  { label: 'About', id: '#about' },
+  { label: 'Intro', id: '#intro-video' },
+  { label: 'Experience', id: '#experience' },
+  { label: 'Projects', id: '#projects' },
+  { label: 'Skills', id: '#skills' },
+  { label: 'Build Log', id: '/build-log', isRoute: true },
+  { label: 'Contact', id: '#contact' }
 ];
 
 export default function Navbar() {
@@ -204,7 +205,7 @@ export default function Navbar() {
             style={{ boxShadow: '0 0 20px rgba(6,182,212,0.25)' }}
             className="px-5 py-2 text-[14px] font-medium font-sans text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all duration-300 flex items-center space-x-2 cursor-pointer hover:shadow-[0_0_25px_rgba(6,182,212,0.55)] hover:scale-[1.02]"
           >
-            <span>Hire Me</span>
+            <span>Let's Talk</span>
           </button>
         </div>
 
@@ -268,7 +269,7 @@ export default function Navbar() {
                 style={{ boxShadow: '0 0 20px rgba(6,182,212,0.25)' }}
                 className="w-full text-center py-3.5 text-xs font-bold uppercase tracking-widest text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all font-mono flex items-center justify-center space-x-2 cursor-pointer"
               >
-                <span>HIRE ME</span>
+                <span>LET'S TALK</span>
                 <ArrowRight size={14} />
               </motion.button>
             </motion.div>
