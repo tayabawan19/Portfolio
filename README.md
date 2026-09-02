@@ -13,7 +13,7 @@
 [![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.0_Flash-4285F4?style=for-the-badge&logo=google&logoColor=white)](https://ai.google.dev/)
 [![License](https://img.shields.io/badge/License-MIT-06B6D4?style=for-the-badge)](LICENSE)
 
-[Live Demo](https://tayabawan.vercel.app) • [Report Bug](https://github.com/tayabawan19/Portfolio/issues) • [Request Feature](https://github.com/tayabawan19/Portfolio/issues)
+[Live Demo](https://tayab.me) • [Report Bug](https://github.com/tayabawan19/Portfolio/issues) • [Request Feature](https://github.com/tayabawan19/Portfolio/issues)
 
 </div>
 
@@ -266,6 +266,7 @@ The repository includes a pre-configured `vercel.json`:
 *BS Software Engineering Student @ COMSATS University Islamabad (4th Semester)*  
 *Alumnus: AI-Powered Data Analysis Remote Internship (Excelerate / RIT Tiger STRIPES)*  
 
+- 🌐 **Website**: [tayab.me](https://tayab.me)
 - 📍 **Location**: Islamabad, Pakistan
 - 📧 **Email**: [tayabawan.in@gmail.com](mailto:tayabawan.in@gmail.com)
 - 💼 **LinkedIn**: [linkedin.com/in/tayyab-tanveer](https://www.linkedin.com/in/tayyab-tanveer-1481b7348)
