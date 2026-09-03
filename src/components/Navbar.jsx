@@ -127,6 +127,18 @@ export default function Navbar() {
     }
   };
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   const menuVariants = {
     closed: {
       x: '100%',
@@ -159,7 +171,7 @@ export default function Navbar() {
     <nav
       className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-[#020817]/75 backdrop-blur-md border-b border-white/6 py-4'
+          ? 'bg-[#020817]/85 backdrop-blur-md border-b border-white/6 py-4'
           : 'bg-transparent py-6 border-b border-transparent'
       }`}
     >
@@ -226,10 +238,11 @@ export default function Navbar() {
             {/* Dark Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
+              animate={{ opacity: 0.8 }}
               exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
               onClick={() => setIsOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 lg:hidden"
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 lg:hidden"
             />
 
             {/* Sliding Panel */}
@@ -238,9 +251,27 @@ export default function Navbar() {
               initial="closed"
               animate="open"
               exit="closed"
-              className="fixed top-0 right-0 w-full sm:w-[380px] h-full bg-[#020817]/98 backdrop-blur-xl border-l border-white/5 z-40 flex flex-col justify-center p-12 space-y-8 lg:hidden"
+              className="fixed top-0 right-0 w-full sm:w-[380px] h-[100dvh] bg-[#020817] border-l border-white/10 z-50 flex flex-col justify-between p-8 sm:p-10 lg:hidden shadow-2xl overflow-y-auto"
             >
-              <div className="flex flex-col space-y-6">
+              {/* Mobile Drawer Top Header */}
+              <div className="flex items-center justify-between pb-6 border-b border-white/10">
+                <button
+                  onClick={() => handleScrollTo('#home')}
+                  className="text-2xl font-bold font-display tracking-tight text-white hover:opacity-90 transition-opacity cursor-pointer text-left"
+                >
+                  TA<span className="text-[#06B6D4]">YYAB</span>
+                </button>
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="p-2 text-white/70 hover:text-white rounded-full bg-white/5 border border-white/10 transition-colors cursor-pointer"
+                  aria-label="Close menu"
+                >
+                  <X size={22} />
+                </button>
+              </div>
+
+              {/* Links */}
+              <div className="flex flex-col space-y-5 my-auto py-6">
                 {navItems.map((item) => {
                   const isActive = activeSection === item.id.replace('#', '') || (item.isRoute && activeSection === item.id.replace('/', ''));
                   return (
@@ -249,7 +280,7 @@ export default function Navbar() {
                       key={item.id}
                       onClick={() => handleScrollTo(item.id, item.isRoute)}
                       className={`text-lg font-bold tracking-widest text-left font-display cursor-pointer relative py-1 group w-fit ${
-                        isActive ? 'text-[#06B6D4]' : 'text-white/70 hover:text-white'
+                        isActive ? 'text-[#06B6D4]' : 'text-white/80 hover:text-white'
                       }`}
                     >
                       <span>{item.label}</span>
@@ -263,15 +294,18 @@ export default function Navbar() {
                 })}
               </div>
 
-              <motion.button
-                variants={linkVariants}
-                onClick={() => handleScrollTo('#contact')}
-                style={{ boxShadow: '0 0 20px rgba(6,182,212,0.25)' }}
-                className="w-full text-center py-3.5 text-xs font-bold uppercase tracking-widest text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all font-mono flex items-center justify-center space-x-2 cursor-pointer"
-              >
-                <span>LET'S TALK</span>
-                <ArrowRight size={14} />
-              </motion.button>
+              {/* Mobile Bottom CTA */}
+              <div className="pt-6 border-t border-white/10">
+                <motion.button
+                  variants={linkVariants}
+                  onClick={() => handleScrollTo('#contact')}
+                  style={{ boxShadow: '0 0 20px rgba(6,182,212,0.25)' }}
+                  className="w-full text-center py-3.5 text-xs font-bold uppercase tracking-widest text-white bg-[#06B6D4] hover:bg-[#0891B2] rounded-md transition-all font-mono flex items-center justify-center space-x-2 cursor-pointer"
+                >
+                  <span>LET'S TALK</span>
+                  <ArrowRight size={14} />
+                </motion.button>
+              </div>
             </motion.div>
           </>
         )}
