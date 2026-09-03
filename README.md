@@ -263,7 +263,7 @@ The repository includes a pre-configured `vercel.json`:
 ## 👨‍💻 About The Author
 
 **Muhammad Tayyab Tanveer**  
-*BS Software Engineering Student @ COMSATS University Islamabad (4th Semester)*  
+*BS Software Engineering Student @ COMSATS University Islamabad (5th Semester)*  
 *Alumnus: AI-Powered Data Analysis Remote Internship (Excelerate / RIT Tiger STRIPES)*  
 
 - 🌐 **Website**: [tayab.me](https://tayab.me)
